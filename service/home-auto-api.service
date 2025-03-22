@@ -1,0 +1,35 @@
+[Unit]
+# A short description of the service (required)
+Description=Home-Auto api to interact with unipi
+
+# Defines the order in which units are started. This example makes the service start after the network is up.
+After=network.target
+
+[Service]
+# The command to start the service (required)
+ExecStart=/opt/home-auto/venv3.11/bin/python /opt/home-auto/code/main.py
+
+# Directory where the service should run from (optional)
+WorkingDirectory=/opt/home-auto/code/
+
+# Defines the restart behavior. Example: restart on failure
+Restart=always
+
+# Time to wait before restarting the service after failure (optional, in seconds)
+RestartSec=5
+
+# Ensure SIGINT is sent to the process group
+KillMode=control-group
+KillSignal=SIGINT
+
+# Logging
+StandardOutput=append:/opt/home-auto/log/home.log
+StandardError=append:/opt/home-auto/log/home.log
+
+[Install]
+# The target to link the service to for automatic start at boot
+# Example: 'multi-user.target' is used for non-graphical multi-user systems
+WantedBy=multi-user.target
+
+# Create an alias so as not to use the full service name
+Alias=home-auto-api
