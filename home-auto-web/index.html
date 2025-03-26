@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Home Automation</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <div id="pins-container">
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.1</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.1">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.1,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.1,0)">DOWN</button>
+        </div>
+        <div id="error-2.1"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.2</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.2">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.2,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.2,0)">DOWN</button>
+        </div>
+        <div id="error-2.2"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.3</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.3">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.3,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.3,0)">DOWN</button>
+        </div>
+        <div id="error-2.3"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.4</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.4">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.4,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.4,0)">DOWN</button>
+        </div>
+        <div id="error-2.4"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.5</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.5">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.5,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.5,0)">DOWN</button>
+        </div>
+        <div id="error-2.5"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.6</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.6">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.6,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.6,0)">DOWN</button>
+        </div>
+        <div id="error-2.6"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.7</p>
+      <div class="div-pin-state">
+        <p class="p-pin-state" id="p-pin-state-2.7">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.7,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.7,0)">DOWN</button>
+        </div>
+        <div id="error-2.7"></div>
+      </div>
+    </div>
+    <div class="div-pin">
+      <p class="p-pin-title">Pin 2.8</p>
+      <div class="div-pin-state">
+        <p id="p-pin-state-2.8">UNDEFINED</p>
+        <div class="div-pin-state-change">
+          <button class="btn-pin-state-change" id="btn-pin-state-change-up"
+            onclick="fetch_state_change(2.8,1)">UP</button>
+          <button class="btn-pin-state-change" id="btn-pin-state-change-down"
+            onclick="fetch_state_change(2.8,0)">DOWN</button>
+        </div>
+        <div id="error-2.8"></div>
+      </div>
+    </div>
+  </div>
+  <script src="index.js"></script>
+</body>
+
+</html>

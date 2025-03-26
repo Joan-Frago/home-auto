@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top (or adjust if you want to center vertically) */
+    align-items: center; /* Center items horizontally */
+    padding: 20px;
+    width: 100%; /* Ensure body takes full width */
+    margin: 0; /* Remove default margin */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+#pins-container {
+    width: 100%; /* Ensure the container is full width */
+    display: flex; /* Make it a flex container to allow child div-pins to align properly */
+    flex-direction: column;
+    flex-flow: wrap;
+    justify-content: center; /* Center the items horizontally within the container */
+    align-items: center;
+}
+
+.div-pin {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%; /* 90% of the screen width */
+    max-width: 600px; /* Optional, can be increased if you want larger divs */
+    margin: 10px;
+    padding: 15px;
+    transition: transform 0.2s;
+    box-sizing: border-box; /* Include padding/border in width calculation */
+}
+
+.div-pin:hover {
+    transform: scale(1.02);
+}
+
+.p-pin-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+.div-pin-state {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Status colors */
+.p-pin-state {
+    border-radius: 5px;
+    color: #fff;
+    padding: 1em;
+}
+
+.id-pin-state-0 {
+    background-color: #f00;
+}
+
+.id-pin-state-1 {
+    background-color: #0f0;
+}
+
+.btn-pin-state-change {
+    width: 40%;
+    border: none;
+    padding: 0.4em;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#btn-pin-state-change-up {
+    background-color: #0f0;
+}
+#btn-pin-state-change-up:hover {
+    background-color: #000;
+    transition: 0.5s;
+}
+
+#btn-pin-state-change-down {
+    background-color: #f00;
+}
+#btn-pin-state-change-down:hover {
+    background-color: #000;
+    transition: 0.5s;
+}
