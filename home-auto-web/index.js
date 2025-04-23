@@ -41,9 +41,19 @@ function fetch_state_change(pin,state) {
     // not valid
     console.log("Invalid state in fetch_state_change: ",state)
   }
-  fetch(`http://100.82.57.41:8000/api/WriteRelay/${pin}/${state}`)
-    .then(response => response.json()) // Convert response to JSON
-    .then(data => {
+  fetch(`http://100.82.57.41:8000/api/WriteRelay/${pin}/${state}`, {
+    method:"POST",
+    headers:{
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  })
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP error. status: ${response.status}`);
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Relay state changed successfully:",data);
     })
     .catch(error => {
       const container = document.getElementById(`error-${pin}`);
