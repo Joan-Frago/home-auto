@@ -50,6 +50,7 @@ function fetch_state_change(pin,state) {
   })
     .then(response => {
       if (!response.ok) throw new Error(`HTTP error. status: ${response.status}`);
+      fetchPinStates();
       return response.json();
     })
     .then((data) => {
@@ -66,7 +67,6 @@ function fetch_state_change(pin,state) {
     });
 }
 
-// Fetch data every 5 seconds
-setInterval(fetchPinStates, 5000);
+setInterval(fetchPinStates, 600000);
 fetchPinStates(); // Initial fetch on page load
 
