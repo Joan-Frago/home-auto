@@ -19,8 +19,8 @@ function setData(){
   return fetch('http://127.0.0.1/home-auto-web/config/conf.json')
   .then((response) => response.json())
   .then((config) => {
-    api_ip=config.config.run_mode.virtual.api_ip;
-    api_port=config.config.run_mode.virtual.api_port;
+    api_ip=config.config.api_ip;
+    api_port=config.config.api_port;
   })
   .catch((error) => {
     console.error("Error fetching config json file: ",error);

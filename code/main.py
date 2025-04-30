@@ -10,7 +10,7 @@ import subprocess
 
 # Personal modules
 sys.path.append("/opt/Python-Utils/utils/")
-from utils import Logger,DataBase,Timer,GetFuncName,GetTime,get_json_data
+from utils import Logger,DataBase,Timer,GetFuncName,GetTime,get_json_data,dict2json,writeFile
 from api import Api
 
 # Init logger
@@ -23,24 +23,52 @@ timer = Timer()
 
 class Base:
 	def __init__(self):
-		self.json_file="/opt/home-auto/config/conf.json"
+		self.json_file="/opt/home-auto/home-auto-web/config/conf.json"
 		self.unipi_sys_base_dir=""
 		self.database_info={}
+		self.isVirtual=True
 		self.run_mode=""
-	def set_running_mode(self,virtual_mode:bool=False):
-		# Start in normal or virtual mode
-
-		#---------------------------------------------------------------------------#
-		#		I SHOULD GENERATE THE JSON DINAMICALLY BASED ON DATABASE INFO		#
-		#---------------------------------------------------------------------------#
-		iDic=get_json_data(aJsonFileDir=self.json_file)
-		if virtual_mode:
+	def set_conf(self):
+		if self.isVirtual:
 			self.run_mode="virtual"
+			iDic={
+				  	"config": {
+				        "unipi_sys_base_dir": "/opt/home-auto/code/virtual_pins/",
+				        "database_info": {
+				          "Host": "127.0.0.1",
+				          "User": "joan",
+				          "Password": "2126",
+				          "DataBase": "home_automation"
+				        }
+				        ,"api_ip":"127.0.0.1"
+				        ,"api_port":"8000"
+				      	}
+				    }
 		else:
 			self.run_mode="normal"
+			iDic={
+				  	"config": {
+				        "unipi_sys_base_dir": "/run/unipi-plc/by-sys/",
+				        "database_info": {
+				          "Host": "192.168.1.100",
+				          "User": "joan",
+				          "Password": "2126",
+				          "DataBase": "home_automation"
+				        }
+				        ,"api_ip":"100.82.57.41"
+				        ,"api_port":"8000"
+				      	}
+				    }
+		iJson=dict2json(iDic)
+		writeFile(aFile="../home-auto-web/config/conf.json",aContent=iJson,fileMode="w",newLine=False)
+	def set_running_mode(self,virtual_mode:bool=True):
+		self.isVirtual=virtual_mode
+		self.set_conf()
+
+		iDic=get_json_data(aJsonFileDir=self.json_file)
 		# Initialize mode variables
-		self.unipi_sys_base_dir=iDic["config"]["run_mode"][self.run_mode]["unipi-sys-base-dir"]
-		db_info=iDic["config"]["run_mode"][self.run_mode]["database-info"]
+		self.unipi_sys_base_dir=iDic["config"]["unipi_sys_base_dir"]
+		db_info=iDic["config"]["database_info"]
 		self.database_info={
 			"Host":db_info["Host"]
 			,"User":db_info["User"]
@@ -73,10 +101,9 @@ class Relay(Base):
 		self.iPin=aPin
 		# Start the relay if specified in calendar
 		self.calendar=Calendar(self)
-		self.start_relay()
-
 		# Init historify for a relay
 		self.hist=Historify(self,aTable="historify")
+		self.start_relay()
 	
 	def read(self):
 		status = subprocess.run(["cat", f"{self.unipi_sys_base_dir}RO{self.iPin}/value"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -107,6 +134,11 @@ class Relay(Base):
 			return err
 		else:
 			data={"status":200}
+			#---------------------------------------------------------------------------#
+			#				I SHOULD HISTORIFY WHEN A PIN'S STATE CHANGES				#
+			#				not when I write a different value to that pin				#
+			#---------------------------------------------------------------------------#
+			self.hist.add(new_pin_state=newState)
 			return data
 	
 	def start_relay(self):
@@ -264,7 +296,6 @@ def WriteRelay(data,aPin:str,aStatus:str):
 	if aStatus != 0 and aStatus != 1:
 		return {"error": f"Relay status {aStatus} can't be set: incorrect status form"}
 	relay = rl_handler.get_relay(aPin)
-	relay.hist.add(new_pin_state=aStatus)
 	
 	return relay.write(newState=aStatus)
 
