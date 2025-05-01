@@ -206,20 +206,25 @@ class Historify:
 		try:
 			iTarget=self.main_hist
 			iThreadName="Thread_relay_"+str(self.relay.iPin)
-			threading.Thread(target=iTarget,name=iThreadName)
+			iThread=threading.Thread(target=iTarget,name=iThreadName)
+			iThread.start()
 		except Exception as e:
 			err="Error creating new thread for "+str(self.relay.iPin)+" pin historification"
 			_logger.error(err)
 	def main_hist(self):
-		last_pin_state=None
-		while True:
-			if last_pin_state is None: last_pin_state=self.relay.read()
-			read_pin=self.relay.read()
-			pin_state=read_pin["state"]
-			if pin_state!=last_pin_state:
-				self.add_hist(new_pin_state=pin_state)
-				last_pin_state=pin_state
-			wait(seconds=5)
+		try:
+			last_pin_state=None
+			while True:
+				if last_pin_state is None: last_pin_state=self.relay.read()
+				read_pin=self.relay.read()
+				pin_state=read_pin["state"]
+				if pin_state!=last_pin_state:
+					self.add_hist(new_pin_state=pin_state)
+					last_pin_state=pin_state
+				wait(seconds=5)
+		except Exception as e:
+			err="Historify.main_hist : "+str(sys.exc_info)+" : "+str(e)
+			_logger.error(err)
 	def add_hist(self,new_pin_state:str):
 		try:
 			self.iDb.connect()
