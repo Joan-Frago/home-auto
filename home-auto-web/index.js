@@ -27,139 +27,137 @@ async function setData() {
     })
 }
 
-function constructHtml() {
-  iGenDiv = document.getElementById("pins-container")
-  for (let i = 1; i <= 8; i++) {
-    // Exemple
-    let iPin = `2.${i}`
-    let iIdPin = `RO2.${i}`
-    // Fer una petició que retorni valors generals
-    // Fer un bucle per cada relé o pin digital que hi hagi
+function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHistPeriod,aRunMode,aForcedValue){
+  iGenDiv = document.getElementById("pins-container");
 
-    const divPin = document.createElement("div");
-    divPin.className = "div-pin";
+  const divPin = document.createElement("div");
+  divPin.className = "div-pin";
 
-    const pTitle = document.createElement("p");
-    pTitle.className = "p-pin-title";
-    pTitle.textContent = `${iPin}`;
-    divPin.appendChild(pTitle);
+  const pTitle = document.createElement("p");
+  pTitle.className = "p-pin-title";
+  pTitle.textContent = `${aName}`;
+  divPin.appendChild(pTitle);
 
-    const divState = document.createElement("div");
-    divState.className = "div-pin-state";
+  const pSubtitle=document.createElement("p");
+  pSubtitle.className="p-pin-sbtl";
+  pSubtitle.textContent=`${aDesc}`;
+  divPin.appendChild(pSubtitle);
 
-    const pState = document.createElement("p");
-    pState.className = "p-pin-state";
-    pState.id = `p-pin-state-${iIdPin}`;
-    pState.textContent = "UNDEFINED";
-    divState.appendChild(pState);
+  const divState = document.createElement("div");
+  divState.className = "div-pin-state";
 
-    const divStateChange = document.createElement("div");
-    divStateChange.className = "div-pin-state-change";
+  const pState = document.createElement("p");
+  pState.className = "p-pin-state";
+  pState.id = `p-pin-state-${aId}`;
+  pState.textContent = "UNDEFINED";
+  divState.appendChild(pState);
 
-    const stateTitle = document.createElement("span");
-    const h3 = document.createElement("h3");
-    h3.textContent = "Forçar valor";
-    stateTitle.appendChild(h3);
-    divStateChange.appendChild(stateTitle);
+  const divStateChange = document.createElement("div");
+  divStateChange.className = "div-pin-state-change";
 
-    const btnUp = document.createElement("button");
-    btnUp.className = "btn-pin-state-change btn-pin-state-change-up";
-    btnUp.textContent = "UP";
-    btnUp.onclick = () => fetch_state_change(iIdPin, 1);
-    divStateChange.appendChild(btnUp);
+  const stateTitle = document.createElement("span");
+  const h3 = document.createElement("h3");
+  h3.textContent = "Forçar valor";
+  stateTitle.appendChild(h3);
+  divStateChange.appendChild(stateTitle);
 
-    const btnDown = document.createElement("button");
-    btnDown.className = "btn-pin-state-change btn-pin-state-change-down";
-    btnDown.textContent = "DOWN";
-    btnDown.onclick = () => fetch_state_change(iIdPin, 0);
-    divStateChange.appendChild(btnDown);
+  const btnUp = document.createElement("button");
+  btnUp.className = "btn-pin-state-change btn-pin-state-change-up";
+  btnUp.textContent = "UP";
+  btnUp.onclick = () => fetch_state_change(aId, 1);
+  divStateChange.appendChild(btnUp);
 
-    const btnReset = document.createElement("button");
-    btnReset.className = "btn-reset-forced-state";
-    btnReset.textContent = "Desactivar valor forçat";
-    btnReset.onclick = () => disable_forced_state(iPin);
-    divStateChange.appendChild(btnReset);
+  const btnDown = document.createElement("button");
+  btnDown.className = "btn-pin-state-change btn-pin-state-change-down";
+  btnDown.textContent = "DOWN";
+  btnDown.onclick = () => fetch_state_change(aId, 0);
+  divStateChange.appendChild(btnDown);
 
-    divState.appendChild(divStateChange);
+  const btnReset = document.createElement("button");
+  btnReset.className = "btn-reset-forced-state";
+  btnReset.textContent = "Desactivar valor forçat";
+  btnReset.onclick = () => disable_forced_state(aName);
+  divStateChange.appendChild(btnReset);
 
-    const divError = document.createElement("div");
-    divError.id = `error-${iIdPin}`;
-    divState.appendChild(divError);
+  divState.appendChild(divStateChange);
 
-    divPin.appendChild(divState);
+  const divError = document.createElement("div");
+  divError.id = `error-${aId}`;
+  divState.appendChild(divError);
 
-    const divCalendar = document.createElement("div");
-    divCalendar.className = "div-calendar";
+  divPin.appendChild(divState);
 
-    const pCalendar = document.createElement("p");
-    pCalendar.className = "p-calendar";
-    pCalendar.textContent = "Calendari";
-    divCalendar.appendChild(pCalendar);
+  const divCalendar = document.createElement("div");
+  divCalendar.className = "div-calendar";
 
-    const form = document.createElement("form");
-    form.id = `calendar-form-${iPin}`;
-    form.onsubmit = (event) => CalendarSubmit(event, iPin);
+  const pCalendar = document.createElement("p");
+  pCalendar.className = "p-calendar";
+  pCalendar.textContent = "Calendari";
+  divCalendar.appendChild(pCalendar);
 
-    const selectorDiv = document.createElement("div");
-    selectorDiv.className = "div-calendar-selector";
+  const form = document.createElement("form");
+  form.id = `calendar-form-${aName}`;
+  form.onsubmit = (event) => CalendarSubmit(event, aName);
 
-    const divActive = document.createElement("div");
-    const labelActive = document.createElement("label");
-    labelActive.setAttribute("for", `iIsActive-${iPin}`);
-    labelActive.innerHTML = "<span>Calendari Actiu</span>";
+  const selectorDiv = document.createElement("div");
+  selectorDiv.className = "div-calendar-selector";
 
-    const inputActive = document.createElement("input");
-    inputActive.type = "checkbox";
-    inputActive.id = `iIsActive-${iPin}`;
-    inputActive.name = "iIsActive";
+  const divActive = document.createElement("div");
+  const labelActive = document.createElement("label");
+  labelActive.setAttribute("for", `iIsActive-${aName}`);
+  labelActive.innerHTML = "<span>Calendari Actiu</span>";
 
-    divActive.appendChild(labelActive);
-    divActive.appendChild(inputActive);
+  const inputActive = document.createElement("input");
+  inputActive.type = "checkbox";
+  inputActive.id = `iIsActive-${aName}`;
+  inputActive.name = "iIsActive";
 
-    const divStart = document.createElement("div");
-    const labelStart = document.createElement("label");
-    labelStart.setAttribute("for", `iStartDate-${iPin}`);
-    labelStart.innerHTML = "<span>Data d'inici</span>";
+  divActive.appendChild(labelActive);
+  divActive.appendChild(inputActive);
 
-    const inputStart = document.createElement("input");
-    inputStart.type = "datetime-local";
-    inputStart.id = `iStartDate-${iPin}`;
-    inputStart.name = "iStartDate";
+  const divStart = document.createElement("div");
+  const labelStart = document.createElement("label");
+  labelStart.setAttribute("for", `iStartDate-${aName}`);
+  labelStart.innerHTML = "<span>Data d'inici</span>";
 
-    divStart.appendChild(labelStart);
-    divStart.appendChild(inputStart);
+  const inputStart = document.createElement("input");
+  inputStart.type = "datetime-local";
+  inputStart.id = `iStartDate-${aName}`;
+  inputStart.name = "iStartDate";
 
-    const divEnd = document.createElement("div");
-    const labelEnd = document.createElement("label");
-    labelEnd.setAttribute("for", `iEndDate-${iPin}`);
-    labelEnd.innerHTML = "<span>Data final</span>";
+  divStart.appendChild(labelStart);
+  divStart.appendChild(inputStart);
 
-    const inputEnd = document.createElement("input");
-    inputEnd.type = "datetime-local";
-    inputEnd.id = `iEndDate-${iPin}`;
-    inputEnd.name = "iEndDate";
+  const divEnd = document.createElement("div");
+  const labelEnd = document.createElement("label");
+  labelEnd.setAttribute("for", `iEndDate-${aName}`);
+  labelEnd.innerHTML = "<span>Data final</span>";
 
-    divEnd.appendChild(labelEnd);
-    divEnd.appendChild(inputEnd);
+  const inputEnd = document.createElement("input");
+  inputEnd.type = "datetime-local";
+  inputEnd.id = `iEndDate-${aName}`;
+  inputEnd.name = "iEndDate";
 
-    selectorDiv.appendChild(divActive);
-    selectorDiv.appendChild(divStart);
-    selectorDiv.appendChild(divEnd);
+  divEnd.appendChild(labelEnd);
+  divEnd.appendChild(inputEnd);
 
-    form.appendChild(selectorDiv);
+  selectorDiv.appendChild(divActive);
+  selectorDiv.appendChild(divStart);
+  selectorDiv.appendChild(divEnd);
 
-    const btnSubmit = document.createElement("button");
-    btnSubmit.type = "submit";
-    btnSubmit.className = "btn-submit-calendar";
-    btnSubmit.textContent = "Send Data";
+  form.appendChild(selectorDiv);
 
-    form.appendChild(btnSubmit);
-    divCalendar.appendChild(form);
+  const btnSubmit = document.createElement("button");
+  btnSubmit.type = "submit";
+  btnSubmit.className = "btn-submit-calendar";
+  btnSubmit.textContent = "Send Data";
 
-    divPin.appendChild(divCalendar);
+  form.appendChild(btnSubmit);
+  divCalendar.appendChild(form);
 
-    iGenDiv.appendChild(divPin);
-  }
+  divPin.appendChild(divCalendar);
+
+  iGenDiv.appendChild(divPin);
 }
 
 function GetPinsData() {
@@ -168,25 +166,31 @@ function GetPinsData() {
     .then(response => response.json()) // Convert response to JSON
     .then(data => {
       data.pins.forEach((pin) => {
-        // establir estat del pin per cada div
-        const p_pin_state = document.getElementById(`p-pin-state-${pin.id}`);
-        // afegir atribut
-        p_pin_state.setAttribute("class", `id-pin-state-${pin.state.toLowerCase()} p-pin-state`);
-        p_pin_state.innerHTML = "";
-        p_pin_state.innerHTML = `${pin.state === "1" ? "UP" : "DOWN"}`;
-
+        
+        let iId=pin.id;
+        let iState=pin.state;
         let iName=pin.name;
         let iDesc=pin.desc;
         let iIsVirtual=pin.isvirtual;
         let iType=pin.type;
-        let iIO=pin.io;
+        let iIO=pin.io=="1" ? "Input" : "Output";
         let iIsHist=pin.ishist;
         let iHistPeriod=pin.histperiod;
         let iRunMode=pin.runmode;
         let iForcedValue=pin.forcedvalue;
-
+        
         // console.log("pin: ",pin.id," state: ",pin.state," name: ",iName," desc: ",iDesc," isvirtual: ",iIsVirtual," type: ",iType," io: ",iIO," ishist: ",iIsHist," histperiod: ",iHistPeriod," runmode: ",iRunMode," forcedvalue: ",iForcedValue);
+        if(document.getElementById(`p-pin-state-${iId}`)==null){
+          constructHtml(iId,iState,iName,iDesc,iIsVirtual,iType,iIO
+            ,iIsHist,iHistPeriod,iRunMode,iForcedValue);
+        }
 
+        // establir estat del pin per cada div
+        const p_pin_state = document.getElementById(`p-pin-state-${iId}`);
+        // afegir atribut
+        p_pin_state.setAttribute("class", `id-pin-state-${iState.toLowerCase()} p-pin-state`);
+        p_pin_state.innerHTML = "";
+        p_pin_state.innerHTML = `${iState === "1" ? "UP" : "DOWN"}`;
 
       });
     })
@@ -301,7 +305,6 @@ function disable_forced_state(aPin) {
     });
 }
 setData().then(() => {
-  constructHtml();
   GetPinsData();
   setInterval(GetPinsData, 5000);
 });

@@ -13,36 +13,46 @@ _logger=Logger(log_path="/opt/home-auto/log/home.log",enable_rotation=False,max_
 sys.excepthook = _logger.exception_handler
 
 def ReadPin(data,aPin:str):
-    aPin="RO"+aPin
-    iPin = rl_handler.get_relay(aPin)
-    return iPin.read()
+    try:
+        if "R" in aPin:
+            raise Exception("Can't read the state of a Relay directly")
+        iPin=dp_handler.get_digitalpin(aPin)
+        iRet=iPin.read()
+        if isinstance(iRet,dict):
+            return iRet
+    except Exception as e:
+        err=f"Could not read {aPin} pin. Error: {str(e)} : {str(sys.exc_info())}"
+        return {"error":err}
 
 def ReadAllPins():
-    pins_state={
-        "pins": []
-    }
-    # set relays
-    for index,idrelay in enumerate(rl_handler.relays):
-        pin=rl_handler.get_relay(idrelay)
-        pin_status=pin.read()
-        pins_state["pins"].append(pin_status)
-        pins_state["pins"][index]["name"]=pin.iName
-        pins_state["pins"][index]["desc"]=pin.iDesc
-        pins_state["pins"][index]["isvirtual"]=pin.iIsVirtual
-        pins_state["pins"][index]["type"]=pin.iType
-        pins_state["pins"][index]["io"]=pin.iIO
-        pins_state["pins"][index]["ishist"]=pin.iIsHist
-        pins_state["pins"][index]["histperiod"]=pin.iHistPeriod
-        pins_state["pins"][index]["runmode"]=pin.run_mode
-        pins_state["pins"][index]["forcedvalue"]=pin.forced_state
-    return pins_state
+    try:
+        pins_state={
+            "pins": []
+        }
+        # set relays
+        for index,idpin in enumerate(dp_handler.dgpins):
+            pin=dp_handler.get_digitalpin(idpin)
+            pin_status=pin.read()
+            pins_state["pins"].append(pin_status)
+            pins_state["pins"][index]["name"]=pin.iName
+            pins_state["pins"][index]["desc"]=pin.iDesc
+            pins_state["pins"][index]["isvirtual"]=pin.iIsVirtual
+            pins_state["pins"][index]["type"]=pin.iType
+            pins_state["pins"][index]["io"]=pin.iIO
+            pins_state["pins"][index]["ishist"]=pin.iIsHist
+            pins_state["pins"][index]["histperiod"]=pin.iHistPeriod
+            pins_state["pins"][index]["runmode"]=pin.run_mode
+            pins_state["pins"][index]["forcedvalue"]=pin.forced_state
+        return pins_state
 
-    for i in range(1,9):
-        iPin="2."+str(i)
-        pin=rl_handler.get_relay(iPin)
-        pin_status = pin.read()
-        pins_state["pins"].append(pin_status)
-    return pins_state
+        for i in range(1,9):
+            iPin="2."+str(i)
+            pin=rl_handler.get_relay(iPin)
+            pin_status = pin.read()
+            pins_state["pins"].append(pin_status)
+        return pins_state
+    except Exception as e:
+        pass
 
 def WriteRelay(data):
     # s'ha de canviar això. idealment s'hauria de mirar si el que ve
@@ -114,7 +124,7 @@ def SetConf(data):
         iDesc=iConf["description"]
         iIsVirtual=iConf["isvirtual"]
         iIsHist=iConf["ishist"]
-        iHistPeriod=iConf["histperiod"]
+        iHistPeriod=iConf["histperiod"] if iConf["histperiod"]!='' else "0"
         iIO=iConf["io"]
 
         if "RO" in iIdPin:
@@ -162,7 +172,8 @@ def SetConf(data):
         err+=" Error: "+str(e)
         err+=" : "+str(sys.exc_info())
         _logger.error(err)
-        return {"status":500}
+        return {"status":500,
+                "error":str(err)}
 
 if __name__ == "__main__":
     rl_handler=RelayHandler()

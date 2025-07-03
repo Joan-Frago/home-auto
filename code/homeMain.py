@@ -10,7 +10,7 @@ import subprocess
 import threading
 
 # Personal modules
-from pyutils.utils import Logger,DataBase,Timer,GetFuncName,GetTime,get_json_data,dict2json,writeFile,wait,GetTimestamp,TimestampTimeDiff
+from pyutils.utils import Logger,DataBase,Timer,GetFuncName,GetTime,get_json_data,dict2json,writeFile,wait,GetEpochTimestamp,TimestampTimeDiff
 
 # Init logger
 _logger=Logger(log_path="/opt/home-auto/log/home.log",enable_rotation=False,max_log_file_size=90)
@@ -26,9 +26,9 @@ class Base:
                  ,aDesc:str
                  ,aIsVirtual:bool
                  ,aType:str
-                 ,aIO:str
                  ,aIsHist:bool
                  ,aHistPeriod:int
+                 ,aIO:str=None
                  ):
         self.unipi_sys_base_dir=aBaseDir
         self.database_info=aDbInfo
@@ -81,7 +81,7 @@ class Base:
             self.iDesc=iRet["description"]
             self.iIsVirtual=iRet["isvirtual"]
             self.iType=iRet["type"]
-            self.iIO=iRet["io"]
+            self.iIO=iRet["io"] if "io" in iRet else None
             self.iIsHist=iRet["hist"]
             self.iHistPeriod=iRet["histperiod"]
             if self.iIsVirtual:self.run_mode="virtual"
@@ -143,9 +143,9 @@ class DigitalPin(Base):
         iMasterTimeLimit=5 # Number of seconds to wait
         running=True
         iCounter=0
-        iLastTime=GetTimestamp()
+        iLastTime=GetEpochTimestamp()
         while running:
-            iTime=GetTimestamp()
+            iTime=GetEpochTimestamp()
             time_diff=TimestampTimeDiff(iLastTime,iTime)
             if time_diff<iMasterTimeLimit:
                 if iCounter>=3:
@@ -194,7 +194,6 @@ class Relay(Base):
                 ,aDesc:str
                 ,aIsVirtual:bool
                 ,aType:str
-                ,aIO:str
                 ,aIsHist:bool
                 ,aHistPeriod:int):
         super().__init__(
@@ -205,7 +204,6 @@ class Relay(Base):
                         ,aDesc
                         ,aIsVirtual
                         ,aType
-                        ,aIO
                         ,aIsHist
                         ,aHistPeriod)
         self.set_conf(aTable="relay")
@@ -230,6 +228,11 @@ class Relay(Base):
             else:wait(seconds=5)
 
     def read(self):
+        """
+        This function should not be used because it is unreliable
+
+        Sometimes the unipi driver doesn't update the file
+        """
         try:
             status = subprocess.run(["cat", f"{self.unipi_sys_base_dir}{self.iIdPin}/value"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -405,16 +408,19 @@ class BaseHandler:
 
         self.init_vars()
     def init_vars(self):
-        iDic=get_json_data(aJsonFileDir=self.iJsonFile)
-        self.unipi_sys_base_dir=iDic["config"]["unipi_sys_base_dir"]
-        db_info=iDic["config"]["database_info"]
-        self.iDbInfo={
-            "Host":db_info["Host"]
-            ,"User":db_info["User"]
-            ,"Password":db_info["Password"]
-            ,"DataBase":db_info["DataBase"]
-        }
-
+        try:
+            iDic=get_json_data(aJsonFileDir=self.iJsonFile)
+            self.unipi_sys_base_dir=iDic["config"]["unipi_sys_base_dir"]
+            db_info=iDic["config"]["database_info"]
+            self.iDbInfo={
+                "Host":db_info["Host"]
+                ,"User":db_info["User"]
+                ,"Password":db_info["Password"]
+                ,"DataBase":db_info["DataBase"]
+            }
+        except Exception as e:
+            err="Could not get config data from config directory : "
+            err+=str(e)+" : "+str(sys.exc_info())
 
     def get_device_data(self,aTable:str):
         iDb=DataBase(
@@ -459,7 +465,6 @@ class RelayHandler(BaseHandler):
                                                 ,aDesc=rl_info["description"]
                                                 ,aIsVirtual=rl_info["isvirtual"]
                                                 ,aType=rl_info["type"]
-                                                ,aIO=rl_info["io"]
                                                 ,aIsHist=rl_info["hist"]
                                                 ,aHistPeriod=rl_info["histperiod"]
                                                 )
@@ -508,6 +513,15 @@ class DigitalPinHandler(BaseHandler):
                                                     )
  
     def get_digitalpin(self,aPin:str):
+        try:
+            return self.dgpins[aPin]
+        except Exception as e:
+            err="Error in DigitalPinHandler.get_digitalpin function trying to get pin "
+            err+=str(aPin)
+            err+=": Error: "
+            err+=str(e)+" : "
+            err+=str(sys.exc_info())
+            _logger.error(err)
         match aPin:
             case "2.1":return self.dgpins["DI2.1"]
             case "2.2":return self.dgpins["DI2.2"]
