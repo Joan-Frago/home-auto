@@ -1,22 +1,30 @@
-# General modules
 import sys
 
-# Personal modules
-from homeMain import RelayHandler,DigitalPinHandler
+from homeMain import RelayHandler,DigitalPinHandler,DigitalPin,Relay
 
 from pyutils.utils import Logger,NormDate,DataBase
 from pyutils.api import Api
 
-# Init logger
 _logger=Logger(log_path="/opt/home-auto/log/home.log",enable_rotation=False,max_log_file_size=90)
-# Unhandled exceptions
+
 sys.excepthook = _logger.exception_handler
+
+def baseResponse(
+    status:int, error:bool, error_description:str, response:dict, received:dict
+    ) -> dict[str,str|dict|int|bool]:
+    return {
+        "status":status
+        ,"error":error
+        ,"error-description":error_description
+        ,"response":response
+        ,"received":received
+    }
 
 def ReadPin(data,aPin:str):
     try:
         if "R" in aPin:
             raise Exception("Can't read the state of a Relay directly")
-        iPin=dp_handler.get_digitalpin(aPin)
+        iPin:DigitalPin=dp_handler.get_digitalpin(aPin)
         iRet=iPin.read()
         if isinstance(iRet,dict):
             return iRet
@@ -29,12 +37,14 @@ def ReadAllPins():
         pins_state={
             "pins": []
         }
-        # set relays
-        for index,idpin in enumerate(dp_handler.dgpins):
-            pin=dp_handler.get_digitalpin(idpin)
+
+        index:int = 0
+        for idpin in dp_handler.dgpins:
+            pin:DigitalPin=dp_handler.get_digitalpin(idpin)
             pin_status=pin.read()
             pins_state["pins"].append(pin_status)
             pins_state["pins"][index]["name"]=pin.iName
+            pins_state["pins"][index]["pintype"]=pin.iPinType
             pins_state["pins"][index]["desc"]=pin.iDesc
             pins_state["pins"][index]["isvirtual"]=pin.iIsVirtual
             pins_state["pins"][index]["type"]=pin.iType
@@ -43,33 +53,46 @@ def ReadAllPins():
             pins_state["pins"][index]["histperiod"]=pin.iHistPeriod
             pins_state["pins"][index]["runmode"]=pin.run_mode
             pins_state["pins"][index]["forcedvalue"]=pin.forced_state
-        return pins_state
 
-        for i in range(1,9):
-            iPin="2."+str(i)
-            pin=rl_handler.get_relay(iPin)
-            pin_status = pin.read()
+            index += 1
+
+        for idpin in rl_handler.relays:
+            pin:Relay=rl_handler.get_relay(idpin)
+            pin_status=pin.read()
             pins_state["pins"].append(pin_status)
+            pins_state["pins"][index]["name"]=pin.iName
+            pins_state["pins"][index]["pintype"]=pin.iPinType
+            pins_state["pins"][index]["desc"]=pin.iDesc
+            pins_state["pins"][index]["isvirtual"]=pin.iIsVirtual
+            pins_state["pins"][index]["type"]=pin.iType
+            pins_state["pins"][index]["io"]=pin.iIO
+            pins_state["pins"][index]["ishist"]=pin.iIsHist
+            pins_state["pins"][index]["histperiod"]=pin.iHistPeriod
+            pins_state["pins"][index]["runmode"]=pin.run_mode
+            pins_state["pins"][index]["forcedvalue"]=pin.forced_state
+
+            index += 1
+
         return pins_state
     except Exception as e:
-        pass
+        raise Exception("Error: ReadAllPins function : Could not successfully read all pins. Error: {err}".format(err=e))
 
-def WriteRelay(data):
-    # s'ha de canviar això. idealment s'hauria de mirar si el que ve
-    # és un digitalpin o relay
-    # e.g. /api/WriteRelay/digital/1.5
-    # e.g. /api/WriteRelay/relay/2.4
-    # potser seria millor passar body (data) amb *ipintype* i *ipin*
-
+def writeToPin(data):
     iPin=data["iObj"]["pin"]
-    iStatus=int(data["iObj"]["newstate"])
+    iState=int(data["iObj"]["newstate"])
 
-    if iStatus != 0 and iStatus != 1:
-        return {"error": f"Relay status {iStatus} can't be set: incorrect status form"}
-    relay = rl_handler.get_relay(iPin)
+    if iState != 0 and iState != 1:
+        return {"error": f"Pin state {iState} can't be set: incorrect new state value"}
+
+    if "DI" in iPin:
+        pin = dp_handler.get_digitalpin(iPin)
+    elif "RO" in iPin:
+        pin = rl_handler.get_relay(iPin)
+    else:
+        return {"error": f"Pin {iPin} does not exist: invalid type name"}
     
-    relay.forced_state=True
-    status=relay.write(newState=iStatus)
+    pin.forced_state=True
+    status=pin.write(newState=iState)
     return status
 
 def GetCalendar(data,aPin:str):
@@ -82,10 +105,9 @@ def SetCalendar(data,aPin:str):
     if not isinstance(data,dict):
         err=f"Cannot insert new calendar data to {aPin}, received data is not dict. Received data is {type(data)}"
         _logger.error(str(err))
-        return {"status":500,"error":str(err)}
+        return {"status":460,"error":str(err)}
     
-    aPin="RO"+aPin
-    relay=rl_handler.get_relay(aPin)
+    relay:Relay=rl_handler.get_relay(aPin)
     iDic=data["iObj"]["calendar"]
     cal_active=iDic["is_active"]
     start_date=NormDate(iDic["start_date"])
@@ -104,7 +126,6 @@ def SetCalendar(data,aPin:str):
 
 def DisableForcedState(data,aPin:str):
     try:
-        aPin="RO"+aPin
         relay=rl_handler.get_relay(aPin=aPin)
         relay.forced_state=False
         return {"status":200}
@@ -116,7 +137,9 @@ def DisableForcedState(data,aPin:str):
 
 def SetConf(data):
     try:
-        if not isinstance(data,dict): raise Exception("data is not dict in SetConf function")
+        if not isinstance(data,dict):
+            raise Exception("data is not dict in SetConf function")
+
         iConf=data["iObj"]
         iIdPin=iConf["idpin"]
         iType=iConf["type"]
@@ -129,12 +152,14 @@ def SetConf(data):
 
         if "RO" in iIdPin:
             iHandler=rl_handler
-            iHandler.get_relay(aPin=iIdPin)
+            iPinObj:Relay = iHandler.get_relay(aPin=iIdPin)
             iTable="relay"
         if "DI" in iIdPin:
             iHandler=dp_handler
-            iHandler.get_digitalpin(aPin=iIdPin)
+            iPinObj:DigitalPin = iHandler.get_digitalpin(aPin=iIdPin)
             iTable="digitalpin"
+        else:
+            raise Exception("Can't read pin {idpin}: Unrecongnized pin type".format(idpin=iIdPin))
 
         iDb=DataBase(
             Host=iHandler.iDbInfo["Host"]
@@ -163,8 +188,15 @@ def SetConf(data):
         iSql+=", histperiod=%s"
         iSql+=" WHERE idpin=%s"
 
-        iQuery = iDb.execute(iSql,iParams,DebugMode=False)
+        iDb.execute(iSql,iParams,DebugMode=False)
         iDb.close()
+
+        iPinObj.update_vars(
+            {"name": str(iName), "description": str(iDesc), "isvirtual": str(iIsVirtual)
+             , "type": str(iType), "io": str(iIO), "hist": str(iIsHist)
+             , "histperiod": str(iHistPeriod)}
+        )
+
 
         return {"status":200}
     except Exception as e:
@@ -187,9 +219,9 @@ if __name__ == "__main__":
                               ,"http://127.0.0.1"])
     _api.add_get_request("/api/ReadAllPins",ReadAllPins)
     _api.add_post_request(r"/api/ReadPin/(?P<aPin>2\.[1-9])",ReadPin)
-    _api.add_post_request("/api/WriteRelay",WriteRelay)
+    _api.add_post_request("/api/write-to-pin",writeToPin)
     _api.add_post_request(r"/api/GetCalendar/(?P<aPin>2\.[1-9])",GetCalendar)
-    _api.add_post_request(r"/api/SetCalendar/(?P<aPin>2\.[1-9])",SetCalendar)
-    _api.add_post_request(r"/api/DisableForcedState/(?P<aPin>2\.[1-9])",DisableForcedState)
+    _api.add_post_request(r"/api/SetCalendar/(?P<aPin>.+?)",SetCalendar)
+    _api.add_post_request(r"/api/DisableForcedState/(?P<aPin>.+?)",DisableForcedState)
     _api.add_post_request(r"/api/SetConf",SetConf)
     _api.init_app()

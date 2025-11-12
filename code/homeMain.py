@@ -18,21 +18,15 @@ _logger=Logger(log_path="/opt/home-auto/log/home.log",enable_rotation=False,max_
 sys.excepthook = _logger.exception_handler
 
 class Base:
-    def __init__(self
-                 ,aBaseDir:str
-                 ,aDbInfo:dict
-                 ,aPin:str
-                 ,aName:str
-                 ,aDesc:str
-                 ,aIsVirtual:bool
-                 ,aType:str
-                 ,aIsHist:bool
-                 ,aHistPeriod:int
-                 ,aIO:str=None
-                 ):
+    def __init__(
+        self,aBaseDir:str,aDbInfo:dict,aPin:str,aName:str,aDesc:str,aIsVirtual:bool,aType:str
+        ,aIsHist:bool,aHistPeriod:int,aIO:str|None=None
+        ):
+
         self.unipi_sys_base_dir=aBaseDir
         self.database_info=aDbInfo
         self.iIdPin=aPin
+        self.iPinType="DigitalPin" if "DI" in self.iIdPin else "Relay"
         self.iName=aName
         self.iDesc=aDesc
         self.iIsVirtual=aIsVirtual
@@ -77,45 +71,47 @@ class Base:
                 raise Exception(err)
             
             iRet=iRet[0]
-            self.iName=iRet["name"]
-            self.iDesc=iRet["description"]
-            self.iIsVirtual=iRet["isvirtual"]
-            self.iType=iRet["type"]
-            self.iIO=iRet["io"] if "io" in iRet else None
-            self.iIsHist=iRet["hist"]
-            self.iHistPeriod=iRet["histperiod"]
-            if self.iIsVirtual:self.run_mode="virtual"
-            else:self.run_mode="normal"
+            self.update_vars(iRet)
 
         except Exception as e:
             err="Error in Base.set_conf function. Error: "+str(e)+" : "+str(sys.exc_info())
             _logger.error(err)
 
+    def update_vars(self, vars:dict):
+        """
+        @Params
+        * vars: dict
+            * name
+            * description
+            * isvirtual
+            * type
+            * io
+            * hist
+            * histperiod
+        """
+        try:
+            self.iName=vars["name"]
+            self.iDesc=vars["description"]
+            self.iIsVirtual=vars["isvirtual"]
+            self.iType=vars["type"]
+            self.iIO=vars["io"] if "io" in vars else None
+            self.iIsHist=vars["hist"]
+            self.iHistPeriod=vars["histperiod"]
+            if self.iIsVirtual:self.run_mode="virtual"
+            else:self.run_mode="normal"
+
+        except Exception as e:
+            _logger.error("Error updating variables: {err}".format(err=e))
+
 
 class DigitalPin(Base):
-    def __init__(self
-                 ,aBaseDir:str
-                 ,aDbInfo:dict
-                 ,aPin:str
-                 ,aName:str
-                 ,aDesc:str
-                 ,aIsVirtual:bool
-                 ,aType:str
-                 ,aIO:str
-                 ,aIsHist:bool
-                 ,aHistPeriod:int
-                 ):
-        super().__init__(aBaseDir
-                        ,aDbInfo
-                        ,aPin
-                        ,aName
-                        ,aDesc
-                        ,aIsVirtual
-                        ,aType
-                        ,aIO
-                        ,aIsHist
-                        ,aHistPeriod
-                        )
+    def __init__(
+        self,aBaseDir:str,aDbInfo:dict,aPin:str,aName:str,aDesc:str,aIsVirtual:bool,aType:str
+        ,aIO:str,aIsHist:bool,aHistPeriod:int
+    ):
+        super().__init__(
+            aBaseDir,aDbInfo,aPin,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHistPeriod
+            )
         self.set_conf(aTable="digitalpin")
         self.hist=Historify(self,aTable="historify")
         self.init_digital_thread()
@@ -351,7 +347,7 @@ class Calendar:
                 err+=" Relay.Calendar.insert_new_data"
                 err+=" function"
                 _logger.error(err)
-                pass
+                raise Exception(err)
 
             iId=self.iUnit.iIdPin
             iStartDate=self.startDate
@@ -397,7 +393,7 @@ class Historify:
             self.iUnit.iDb.execute(iSql,iParams)
             self.iUnit.iDb.close()
         except Exception as e:
-            err="Error in Relay.Historify.add_hist function : "+str(sys.exc_info())+" : "+str(e)
+            err="Error in " + self.iUnit.iPinType + ".Historify.add_hist function : "+str(sys.exc_info())+" : "+str(e)
             _logger.error(err)
 
 class BaseHandler:
@@ -458,6 +454,7 @@ class RelayHandler(BaseHandler):
         iData=self.get_device_data(aTable=iTable) # all db registers of relay table
         for i in range(len(iData)):
             rl_info=iData[i] # db register for each ipin
+
             self.relays[rl_info["idpin"]]=Relay(aBaseDir=self.unipi_sys_base_dir
                                                 ,aDbInfo=self.iDbInfo
                                                 ,aPin=rl_info["idpin"]
@@ -469,7 +466,7 @@ class RelayHandler(BaseHandler):
                                                 ,aHistPeriod=rl_info["histperiod"]
                                                 )
     
-    def get_relay(self,aPin:str):
+    def get_relay(self,aPin:str) -> Relay|None:
         try:
             return self.relays[aPin]
         except Exception as e:
@@ -479,16 +476,6 @@ class RelayHandler(BaseHandler):
             err+=str(e)+" : "
             err+=str(sys.exc_info())
             _logger.error(err)
-        match aPin:
-            case "2.1":return self.relays["RO2.1"]
-            case "2.2":return self.relays["RO2.2"]
-            case "2.3":return self.relays["RO2.3"]
-            case "2.4":return self.relays["RO2.4"]
-            case "2.5":return self.relays["RO2.5"]
-            case "2.6":return self.relays["RO2.6"]
-            case "2.7":return self.relays["RO2.7"]
-            case "2.8":return self.relays["RO2.8"]
-        return None
 
 class DigitalPinHandler(BaseHandler):
     def __init__(self):
@@ -512,7 +499,7 @@ class DigitalPinHandler(BaseHandler):
                                                     ,aHistPeriod=dp_info["histperiod"]
                                                     )
  
-    def get_digitalpin(self,aPin:str):
+    def get_digitalpin(self,aPin:str) -> DigitalPin|None:
         try:
             return self.dgpins[aPin]
         except Exception as e:
@@ -522,14 +509,8 @@ class DigitalPinHandler(BaseHandler):
             err+=str(e)+" : "
             err+=str(sys.exc_info())
             _logger.error(err)
-        match aPin:
-            case "2.1":return self.dgpins["DI2.1"]
-            case "2.2":return self.dgpins["DI2.2"]
-            case "2.3":return self.dgpins["DI2.3"]
-            case "2.4":return self.dgpins["DI2.4"]
-            case "2.5":return self.dgpins["DI2.5"]
-            case "2.6":return self.dgpins["DI2.6"]
-            case "2.7":return self.dgpins["DI2.7"]
-            case "2.8":return self.dgpins["DI2.8"]
-        return None
+
+
+# Per tractar les persianes hauria de crear un altre handler, que retonrés l'objecte
+# Persiana, que junta un Relay amb un DigitalPin
 

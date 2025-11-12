@@ -2,7 +2,7 @@ let api_ip = "";
 let api_port = "";
 
 async function setData() {
-  return fetch('http://127.0.0.1/home-auto-web/config/conf.json')
+  return fetch('http://127.0.0.1/home/config/conf.json')
     .then((response) => response.json())
     .then((config) => {
       api_ip = config.config.api_ip;

@@ -16,7 +16,7 @@ let api_ip = "";
 let api_port = "";
 
 async function setData() {
-  return fetch('http://127.0.0.1/home-auto-web/config/conf.json')
+  return fetch('http://127.0.0.1/home/config/conf.json')
     .then((response) => response.json())
     .then((config) => {
       api_ip = config.config.api_ip;
@@ -27,7 +27,7 @@ async function setData() {
     })
 }
 
-function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHistPeriod,aRunMode,aForcedValue){
+function constructHtml(aId,aPinType,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHistPeriod,aRunMode,aForcedValue){
   iGenDiv = document.getElementById("pins-container");
 
   const divPin = document.createElement("div");
@@ -52,34 +52,36 @@ function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHist
   pState.textContent = "UNDEFINED";
   divState.appendChild(pState);
 
-  const divStateChange = document.createElement("div");
-  divStateChange.className = "div-pin-state-change";
+  if(aPinType=="Relay"){
+    const divStateChange = document.createElement("div");
+    divStateChange.className = "div-pin-state-change";
 
-  const stateTitle = document.createElement("span");
-  const h3 = document.createElement("h3");
-  h3.textContent = "Forçar valor";
-  stateTitle.appendChild(h3);
-  divStateChange.appendChild(stateTitle);
+    const stateTitle = document.createElement("span");
+    const h3 = document.createElement("h3");
+    h3.textContent = "Forçar valor";
+    stateTitle.appendChild(h3);
+    divStateChange.appendChild(stateTitle);
 
-  const btnUp = document.createElement("button");
-  btnUp.className = "btn-pin-state-change btn-pin-state-change-up";
-  btnUp.textContent = "UP";
-  btnUp.onclick = () => fetch_state_change(aId, 1);
-  divStateChange.appendChild(btnUp);
+    const btnUp = document.createElement("button");
+    btnUp.className = "btn-pin-state-change btn-pin-state-change-up";
+    btnUp.textContent = "UP";
+    btnUp.onclick = () => fetch_state_change(aId, 1);
+    divStateChange.appendChild(btnUp);
 
-  const btnDown = document.createElement("button");
-  btnDown.className = "btn-pin-state-change btn-pin-state-change-down";
-  btnDown.textContent = "DOWN";
-  btnDown.onclick = () => fetch_state_change(aId, 0);
-  divStateChange.appendChild(btnDown);
+    const btnDown = document.createElement("button");
+    btnDown.className = "btn-pin-state-change btn-pin-state-change-down";
+    btnDown.textContent = "DOWN";
+    btnDown.onclick = () => fetch_state_change(aId, 0);
+    divStateChange.appendChild(btnDown);
 
-  const btnReset = document.createElement("button");
-  btnReset.className = "btn-reset-forced-state";
-  btnReset.textContent = "Desactivar valor forçat";
-  btnReset.onclick = () => disable_forced_state(aName);
-  divStateChange.appendChild(btnReset);
+    const btnReset = document.createElement("button");
+    btnReset.className = "btn-reset-forced-state";
+    btnReset.textContent = "Desactivar valor forçat";
+    btnReset.onclick = () => disable_forced_state(aId);
+    divStateChange.appendChild(btnReset);
 
-  divState.appendChild(divStateChange);
+    divState.appendChild(divStateChange);
+  }
 
   const divError = document.createElement("div");
   divError.id = `error-${aId}`;
@@ -96,20 +98,20 @@ function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHist
   divCalendar.appendChild(pCalendar);
 
   const form = document.createElement("form");
-  form.id = `calendar-form-${aName}`;
-  form.onsubmit = (event) => CalendarSubmit(event, aName);
+  form.id = `calendar-form-${aId}`;
+  form.onsubmit = (event) => CalendarSubmit(event, aId);
 
   const selectorDiv = document.createElement("div");
   selectorDiv.className = "div-calendar-selector";
 
   const divActive = document.createElement("div");
   const labelActive = document.createElement("label");
-  labelActive.setAttribute("for", `iIsActive-${aName}`);
+  labelActive.setAttribute("for", `iIsActive-${aId}`);
   labelActive.innerHTML = "<span>Calendari Actiu</span>";
 
   const inputActive = document.createElement("input");
   inputActive.type = "checkbox";
-  inputActive.id = `iIsActive-${aName}`;
+  inputActive.id = `iIsActive-${aId}`;
   inputActive.name = "iIsActive";
 
   divActive.appendChild(labelActive);
@@ -117,12 +119,12 @@ function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHist
 
   const divStart = document.createElement("div");
   const labelStart = document.createElement("label");
-  labelStart.setAttribute("for", `iStartDate-${aName}`);
+  labelStart.setAttribute("for", `iStartDate-${aId}`);
   labelStart.innerHTML = "<span>Data d'inici</span>";
 
   const inputStart = document.createElement("input");
   inputStart.type = "datetime-local";
-  inputStart.id = `iStartDate-${aName}`;
+  inputStart.id = `iStartDate-${aId}`;
   inputStart.name = "iStartDate";
 
   divStart.appendChild(labelStart);
@@ -130,12 +132,12 @@ function constructHtml(aId,aState,aName,aDesc,aIsVirtual,aType,aIO,aIsHist,aHist
 
   const divEnd = document.createElement("div");
   const labelEnd = document.createElement("label");
-  labelEnd.setAttribute("for", `iEndDate-${aName}`);
+  labelEnd.setAttribute("for", `iEndDate-${aId}`);
   labelEnd.innerHTML = "<span>Data final</span>";
 
   const inputEnd = document.createElement("input");
   inputEnd.type = "datetime-local";
-  inputEnd.id = `iEndDate-${aName}`;
+  inputEnd.id = `iEndDate-${aId}`;
   inputEnd.name = "iEndDate";
 
   divEnd.appendChild(labelEnd);
@@ -168,6 +170,7 @@ function GetPinsData() {
       data.pins.forEach((pin) => {
         
         let iId=pin.id;
+        let iPinType=pin.pintype
         let iState=pin.state;
         let iName=pin.name;
         let iDesc=pin.desc;
@@ -179,9 +182,8 @@ function GetPinsData() {
         let iRunMode=pin.runmode;
         let iForcedValue=pin.forcedvalue;
         
-        // console.log("pin: ",pin.id," state: ",pin.state," name: ",iName," desc: ",iDesc," isvirtual: ",iIsVirtual," type: ",iType," io: ",iIO," ishist: ",iIsHist," histperiod: ",iHistPeriod," runmode: ",iRunMode," forcedvalue: ",iForcedValue);
         if(document.getElementById(`p-pin-state-${iId}`)==null){
-          constructHtml(iId,iState,iName,iDesc,iIsVirtual,iType,iIO
+          constructHtml(iId,iPinType,iState,iName,iDesc,iIsVirtual,iType,iIO
             ,iIsHist,iHistPeriod,iRunMode,iForcedValue);
         }
 
@@ -215,7 +217,7 @@ function fetch_state_change(iIdPin, iState) {
     pin: iIdPin
     ,newstate: iState
   };
-  let iRoute = `http://${api_ip}:${api_port}/api/WriteRelay`;
+  let iRoute = `http://${api_ip}:${api_port}/api/write-to-pin`;
   fetch(iRoute, {
     method: "POST",
     headers: {
