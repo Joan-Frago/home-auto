@@ -1,6 +1,7 @@
 import sys
 
 from homeMain import RelayHandler,DigitalPinHandler,DigitalPin,Relay
+from homeCustom import Persiana
 
 from pyutils.utils import Logger,NormDate,DataBase
 from pyutils.api import Api
@@ -215,6 +216,23 @@ def SetConf(data):
         return {"status":500,
                 "error":str(err)}
 
+def novaPersiana(data):
+    try:
+        dp_idpin = data["digitalpin"]["idpin"]
+        rl_idpin = data["relay"]["idpin"]
+
+        relay = rl_handler.get_relay(rl_idpin)
+        diinput = dp_handler.get_digitalpin(dp_idpin)
+
+        persiana = Persiana(relay,diinput)
+        persiana.run()
+
+        return baseResponse(200,False,error_description="",response="Nova persiana creada correctament",received=data)
+
+    except Exception as e:
+        return baseResponse(500,True,str(e)+" : "+str(sys.exc_info()),{"none":"none"},data)
+
+
 if __name__ == "__main__":
     rl_handler=RelayHandler()
     dp_handler=DigitalPinHandler()
@@ -232,4 +250,5 @@ if __name__ == "__main__":
     _api.add_post_request(r"/api/SetCalendar/(?P<aPin>.+?)",SetCalendar)
     _api.add_post_request(r"/api/DisableForcedState/(?P<aPin>.+?)",DisableForcedState)
     _api.add_post_request(r"/api/SetConf",SetConf)
+    _api.add_post_request("/api/nova-persiana",novaPersiana)
     _api.init_app()

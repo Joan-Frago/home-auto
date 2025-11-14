@@ -117,6 +117,8 @@ class DigitalPin(Base):
         self.init_digital_thread()
         _logger.info(f"Digital Pin {self.iIdPin} running in {self.run_mode} mode")
 
+        self.start_relay = False
+
     def init_digital_thread(self):
         iTarget=self.main_digital_thread
         iThreadName="Thread_digital_"+str(self.iIdPin)
@@ -146,8 +148,9 @@ class DigitalPin(Base):
             if time_diff<iMasterTimeLimit:
                 if iCounter>=3:
                     # AQUI S'HAURIA D'ENCENDRE UN RELÉ
+                    self.start_relay = True
+                    wait(20)
                     running=False
-                    break
                 else:
                     iValue=int(self.read()["state"])
                     if iValue==1:iCounter+=1
@@ -509,8 +512,4 @@ class DigitalPinHandler(BaseHandler):
             err+=str(e)+" : "
             err+=str(sys.exc_info())
             _logger.error(err)
-
-
-# Per tractar les persianes hauria de crear un altre handler, que retonrés l'objecte
-# Persiana, que junta un Relay amb un DigitalPin
 

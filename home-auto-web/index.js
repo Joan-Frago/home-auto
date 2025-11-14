@@ -205,6 +205,9 @@ function GetPinsData() {
 				p_pin_state.innerHTML = `${iState === "1" ? "UP" : "DOWN"}`;
 
 			});
+			const container = document.getElementById("pins-container");
+			const error = document.createElement("p");
+			container.appendChild(error);
 		})
 		.catch(error => {
 			const container = document.getElementById("pins-container");
