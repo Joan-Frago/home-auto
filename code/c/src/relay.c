@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../inc/unipi_control.h"
+#include "../inc/config.h"
 
 int relay_write(struct Relay *relay, int newState){
 	int ret_val = 0;

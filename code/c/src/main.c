@@ -8,10 +8,16 @@
 
 #include "../inc/tcp_server.h"
 #include "../inc/unipi_control.h"
+#include "../inc/config.h"
 
 int foo();
 
 int main(){
+	if(load_config() == -1){
+		perror("load_config returned -1. Error loading configuration\n");
+		return -1;
+	}
+
 	return start_tcp_server();
 }
 

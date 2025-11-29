@@ -4,7 +4,7 @@ BINDIR = bin
 INCDIR = inc
 
 TARGET = $(BINDIR)/unipi_main
-OBJS   = $(OBJDIR)/main.o $(OBJDIR)/digital.o $(OBJDIR)/relay.o
+OBJS   = $(OBJDIR)/main.o $(OBJDIR)/digital.o $(OBJDIR)/relay.o $(OBJDIR)/config.o
 
 CFLAGS = -Wall -I$(INCDIR)
 
