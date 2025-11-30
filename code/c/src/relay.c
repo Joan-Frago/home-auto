@@ -5,7 +5,7 @@
 #include "../inc/unipi_control.h"
 #include "../inc/config.h"
 
-int relay_write(struct Relay *relay, int newState){
+int relay_write(struct Relay *relay, int new_state){
 	int ret_val = 0;
 
 	size_t path_len = strlen(UNIPI_SYS_BASE_DIR) + strlen(relay->id_pin) + strlen("/value") + 1;
@@ -21,10 +21,11 @@ int relay_write(struct Relay *relay, int newState){
 		strcat(file_path, relay->id_pin);
 		strcat(file_path, "/value");
 
-		printf("%s\n",file_path);
-		//FILE *fp = fopen(fileDir,"w");
+		FILE *fp = fopen(file_path,"w");
+		putc('0' + new_state, fp);
+		putc(EOF,fp);
+		fclose(fp);
 	}
-	
 	free(file_path);
 	
 	return ret_val;

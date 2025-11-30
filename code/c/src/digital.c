@@ -22,13 +22,14 @@ int digital_read(struct DigitalInput *di, int *dest){
 		strcat(file_path, di->id_pin);
 		strcat(file_path, "/value");
 
-		printf("%s\n",file_path);
-		//FILE *fp = fopen(fileDir,"w");
-	}
-	
-	free(file_path);
+		//printf("%s\n",file_path);
+		FILE *fp = fopen(file_path,"r");
+		int status = (int)getc(fp);
 
-	*dest = 1;
+		*dest = status;
+		fclose(fp);
+	}
+	free(file_path);
 
 	return ret_val;
 }
