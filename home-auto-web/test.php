@@ -21,25 +21,27 @@ if ($result === false) {
 	echo "OK.\n";
 }
 
-for($i = 0;$i<100;$i++){
+$in = "new_device\n\n";
+$in .= "device_name=Device 1\n";
+$in .= "relay_id_pin=RO2.1\n";
+$in .= "relay_id=2.1\n";
+$in .= "digitalinput_id_pin=DI1.4\n";
+$in .= "digitalinput_id=1.4\n\n";
+$in .= "\n";
 
-	$in = (string)$i;
-	$in .= "\n";
+echo "Sending message...";
+socket_write($socket, $in, strlen($in));
+echo "OK.\n";
 
-	echo "Sending message...";
-	socket_write($socket, $in, strlen($in));
-	echo "OK.\n";
+echo "Reading response:\n";
+$out = '';
+$out = socket_read($socket, 2048);
 
-	echo "Reading response:\n";
-	$out = '';
-	$out = socket_read($socket, 2048);
-
-	if($out == false){
-		echo "Error reading or server disconnected\n";
-		break;
-	}
-	echo $out;
+if($out == false){
+	echo "Error reading or server disconnected\n";
 }
+echo $out;
+
 echo "Closing socket...";
 if($socket){
 	socket_close($socket);
