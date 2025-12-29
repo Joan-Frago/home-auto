@@ -4,7 +4,7 @@ BINDIR = bin
 INCDIR = inc
 
 TARGET = $(BINDIR)/unipi_main
-OBJS   = $(OBJDIR)/main.o $(OBJDIR)/digital.o $(OBJDIR)/relay.o $(OBJDIR)/config.o $(OBJDIR)/tcp_server.o
+OBJS   = $(OBJDIR)/main.o $(OBJDIR)/digital.o $(OBJDIR)/relay.o $(OBJDIR)/config.o $(OBJDIR)/tcp_server.o $(OBJDIR)/device.o
 
 XML2_CFLAGS = $(shell xml2-config --cflags)
 XML2_LIBS = $(shell xml2-config --libs)
