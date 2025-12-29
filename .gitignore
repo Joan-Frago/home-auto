@@ -11,5 +11,5 @@ venv*
 home-auto-web/config/conf.json
 
 # object files and binaries
-code/c/bin/*
-code/c/obj/*
+code/bin/*
+code/obj/*
