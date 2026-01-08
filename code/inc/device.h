@@ -27,14 +27,14 @@ int set_devices(struct Device devices[MAX_DEVICES]);
 #include <libxml2/libxml/xpath.h>
 
 int read_devices_xml(struct Device devices[MAX_DEVICES]);
-int read_device_id(struct Device devices[MAX_DEVICES], xmlNode *, int);
-int read_device_name(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_description(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_historify(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_fire(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_fire_date(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_relay(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
-int read_device_digital_input(struct Device devices[MAX_DEVICES], xmlXPathContext *, int);
+int read_device_id(struct Device *device, xmlNode *);
+int read_device_name(struct Device *device, xmlXPathContext *);
+int read_device_description(struct Device *device, xmlXPathContext *);
+int read_device_historify(struct Device *device, xmlXPathContext *);
+int read_device_fire(struct Device *device, xmlXPathContext *);
+int read_device_fire_date(struct Device *device, xmlXPathContext *);
+int read_device_relay(struct Device *device, xmlXPathContext *);
+int read_device_digital_input(struct Device *device, xmlXPathContext *);
 
 int get_all_devices(void);
 int set_device(xmlNode *);
