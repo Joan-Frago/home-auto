@@ -36,7 +36,7 @@ int read_device_fire_date(struct Device *device, xmlXPathContext *);
 int read_device_relay(struct Device *device, xmlXPathContext *);
 int read_device_digital_input(struct Device *device, xmlXPathContext *);
 
-int get_all_devices(void);
+int get_all_devices(char *resp_buf);
 int set_device(xmlNode *);
 
 #endif

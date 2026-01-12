@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -10,8 +9,7 @@
 #include <libxml2/libxml/xpath.h>
 
 #include "../inc/tcp_server.h"
-
-char *read_request_function(char *);
+#include "../inc/device.h"
 
 void *start_tcp_server(void* arg){
 	printf("Server Thread ID is %lu\n",(unsigned long)pthread_self());
@@ -91,7 +89,7 @@ int talk(int *sockfd){
 
 		// Process received data
 		if(process_recv(recv_buf, resp_buf) != 0){
-			printf("Error processing received data from client\n");
+			printf("Error: Could not process received data from client\n");
 		}
 
 		// Send a response
@@ -111,34 +109,37 @@ int process_recv(char *recv_buf, char *resp_buf){
 	printf("Received buffer: %s\n", recv_buf);
 	strcat(resp_buf, "ok\\n");
 
-	struct Request req;
+	req_t req;
+	read_request(&req, recv_buf);
 
-	// Get function name from xml
-	req.function = read_request_function(recv_buf);
-	
-	// Get the rest of the xml (children node)
-	// Set req.data to the rest of the xml
-	
 	printf("Request function name: %s\n", req.function);
+	if(req.data){
+		printf("Request data: %s\n", BAD_CAST req.data);
+	}
 
 	// Call another function that reads req.function and calls the target function
+	if(call_target_function(&req, resp_buf) == -1){
+		printf("Error: call_target_function returned -1\n");
+		return -1;
+	}
 
 	return 0;
 }
 
 /*
- * Reads the function name from the request and writes it in dest
+ * Reads the function name and content from the request and sets the request struct
  */
-char *read_request_function(char *xml_doc_str){
+int read_request(req_t *req, char *xml_doc_str){
 	xmlDoc *req_xml_doc = xmlReadDoc(BAD_CAST xml_doc_str, NULL, NULL, 0);
 	if(req_xml_doc == NULL){
 		printf("Error: Could not parse request xml.\n");
+		return -1;
 	}
-
 	
 	xmlXPathContext *xpath_ctx = xmlXPathNewContext(req_xml_doc);
 	if(xpath_ctx == NULL){
 		printf("Error: Unable to create new XPath context.\n");
+		return -1;
 	}
 
 	xmlNode *root = xmlDocGetRootElement(req_xml_doc);
@@ -148,12 +149,39 @@ char *read_request_function(char *xml_doc_str){
 
 	xpath_ctx->node = device;
 
+	// Request function
 	xmlXPathObjectPtr xpath_obj = xmlXPathEvalExpression(BAD_CAST "/request/function", xpath_ctx);
 
 	xmlNode *node = xpath_obj->nodesetval->nodeTab[0];
 	xmlChar *content = xmlNodeGetContent(node);
 
+	req->function = strdup((char *)content);
+
+	xmlFreeNode(node);
+	xmlFree(content);
 	xmlXPathFreeObject(xpath_obj);
 
-	return (char *)content;
+	// Request data
+	xpath_obj = xmlXPathEvalExpression(BAD_CAST "/request/data", xpath_ctx);
+
+	if(xpath_obj && !xmlXPathNodeSetIsEmpty(xpath_obj->nodesetval)){
+		node = xpath_obj->nodesetval->nodeTab[0];
+
+		req->data = node;
+	}
+
+	xmlXPathFreeObject(xpath_obj);
+
+	return 0;
+}
+
+int call_target_function(req_t *req, char *resp_buf){
+	if(strcmp(req->function, "get_all_devices") == 0){
+		if(get_all_devices(resp_buf) == -1){
+			printf("Error: get_all_devices returned -1\n");
+			return -1;
+		}
+	}
+
+	return 0;
 }

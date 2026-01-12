@@ -6,6 +6,7 @@
 #include "../inc/unipi_control.h"
 #include "../inc/device.h"
 #include "../inc/util.h"
+#include "../inc/tcp_server.h"
 
 /*
  * Set all devices before running.
@@ -200,8 +201,22 @@ int read_device_digital_input(struct Device *device, xmlXPathContext *xpath_ctx)
 	return 0;
 }
 
-int get_all_devices(void){
+int get_all_devices(char *resp_buf){
 	printf("Getting all devices...\n");
+
+	FILE *fptr = fopen(XML_DEVICES_PATH, "r");
+	if(fptr==NULL){
+		printf("Error: Could not open %s\n",XML_DEVICES_PATH);
+		return -1;
+	}
+
+	char c;
+	int i = 0;
+	while((c = getc(fptr)) != EOF && i < MESSAGE_SIZE){
+		resp_buf[i++] = c;
+	}
+	resp_buf[i] = EOF;
+	printf("%s\n",resp_buf);
 
 	return 0;
 }

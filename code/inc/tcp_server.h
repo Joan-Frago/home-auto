@@ -9,11 +9,14 @@
 void *start_tcp_server(void*);
 int talk(int *);
 
-struct Request{
+typedef struct Request{
 	char *function;
 	xmlNode *data;
-};
+}req_t;
 
 int process_recv(char *recv_buf, char *resp_buf);
+
+int read_request(req_t *, char *);
+int call_target_function(req_t *, char *resp_buf);
 
 #endif
