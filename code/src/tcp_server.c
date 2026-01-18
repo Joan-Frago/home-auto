@@ -10,6 +10,7 @@
 
 #include "../inc/tcp_server.h"
 #include "../inc/device.h"
+#include "../inc/config.h"
 
 void *start_tcp_server(void* arg){
 	printf("Server Thread ID is %lu\n",(unsigned long)pthread_self());
@@ -28,7 +29,7 @@ void *start_tcp_server(void* arg){
 
 	// Bind the socket
 	server_addr.sin_family = PF_INET;
-	server_addr.sin_port = htons(8080);
+	server_addr.sin_port = htons(atoi(get_var_value(TCP_SERVER_PORT)));
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	int ret = bind(sockfd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr));

@@ -3,44 +3,24 @@
 #include <stdlib.h>
 #include "../inc/config.h"
 
-char *UNIPI_SYS_BASE_DIR;
+var_t vars[MAX_VARS];
 
 int load_config(void){
 	printf("Loading config...\n");
 
-	struct Var *var = alloc_var_mem();
-	if(var == NULL){
-		printf("Could not allocate memory for config variables\n");
-		return -1;
-	}
-
-	UNIPI_SYS_BASE_DIR = (char *)malloc(sizeof(char[MAX_VAR_SIZE]));
-	if(UNIPI_SYS_BASE_DIR == NULL){
-		printf("Could not allocate memory for UNIPI_SYS_BASE_DIR (%ld bytes)\n",sizeof(char[MAX_VAR_SIZE]));
-
-		free(var->name);
-		free(var->value);
-		free(var);
-		return -1;
-	}
-	
 	FILE *fp;
-	fp = fopen("conf/home.conf", "r");
+	fp = fopen(CONFIG_FILE_DIR, "r");
 	if(fp == NULL){
 		perror("Error opening config file\n");
-
-		free(var->name);
-		free(var->value);
-		free(var);
 
 		return -1;
 	}
 
 	char buf[MAX_VAR_SIZE];
-	int buf_idx = 0;
+	int buf_idx, var_idx = 0;
 
-	char c;
-	while((c = getc(fp)) != EOF && buf_idx < MAX_VAR_SIZE){
+	int c;
+	while((c = getc(fp)) != EOF && buf_idx < MAX_VAR_SIZE - 1){
 		//printf("Read char: %c\n",c);
 		if(c != '\n' && c != EOF){
 			if(c != '='){
@@ -49,70 +29,46 @@ int load_config(void){
 			}else if(c == '='){
 				buf[buf_idx] = '\0';
 				buf_idx = 0;
-				set_var_name(var, buf);
-				strcpy(buf,"");
+				//printf("%s\n",buf);
+				set_var_name(&vars[var_idx], buf);
+				buf[0] = '\0';
 			}
 		}else{
 			// We have read the \n
 			buf[buf_idx] = '\0';
 			buf_idx = 0;
-			set_var_value(var, buf);
-			set_var(var);
+			//printf("%s\n",buf);
+			set_var_value(&vars[var_idx], buf);
+
+			printf("+ Variable set: %s = %s\n",vars[var_idx].name,vars[var_idx].value);
+			var_idx++;
 		}
 	}
 
 	printf("Finished setting config variables.\n\n");
 
 	fclose(fp);
-	free(var->name);
-	free(var->value);
-	free(var);
 	
 	return 0;
 }
 
-int set_var_name(struct Var *var, char *buf){
+int set_var_name(var_t *var, char *buf){
 	strcpy(var->name,buf);
 
 	return 0;
 }
 
-int set_var_value(struct Var *var, char *buf){
+int set_var_value(var_t *var, char *buf){
 	strcpy(var->value,buf);
 	
 	return 0;
 }
 
-int set_var(struct Var *var){
-	if(strcmp(var->name,"UNIPI_SYS_BASE_DIR") == 0){
-		strcpy(UNIPI_SYS_BASE_DIR,var->value);
+char *get_var_value(char *var_name){
+	for(int i=0; i<MAX_VARS; i++){
+		if(strcmp(vars[i].name, var_name)==0){
+			return vars[i].value;
+		}
 	}
-
-
-	printf("+ Variable set: %s = %s\n",var->name,var->value);
-
-	return 0;
-}
-
-struct Var *alloc_var_mem(void){
-	int nbytes = 0;
-
-	struct Var *var = (struct Var *)malloc(sizeof(struct Var));
-	if(var == NULL){
-		printf("Could not allocate memory for struct Var (%ld bytes)\n",sizeof(struct Var));
-		return NULL;
-	}else{
-		nbytes += sizeof(struct Var);
-	}
-	
-	var->name = (char *)malloc(sizeof(char[MAX_VAR_SIZE]));
-	var->value = (char *)malloc(sizeof(char[MAX_VAR_SIZE]));
-	if(var->name == NULL || var->value == NULL){
-		printf("Could not allocate memory for var->name or var->value (%ld bytes or %ld bytes)\n",sizeof(char[MAX_VAR_SIZE]),sizeof(char[MAX_VAR_SIZE]));
-		return NULL;
-	}else{
-		nbytes += sizeof(char[MAX_VAR_SIZE]) * 2;
-	}
-
-	return var;
+	return NULL;
 }
