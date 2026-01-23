@@ -207,7 +207,7 @@ int get_all_devices(char *resp_buf){
 	while((c = getc(fptr)) != EOF && i < MESSAGE_SIZE){
 		resp_buf[i++] = c;
 	}
-	resp_buf[i] = EOF;
+	resp_buf[i] = '\0';
 	printf("Response:\n%s\n",resp_buf);
 
 	return 0;
