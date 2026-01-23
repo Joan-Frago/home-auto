@@ -8,7 +8,8 @@
 	<meta charset="UTF-8">
 	<title>Home Control</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="home.css">
+	<link rel="stylesheet" href="./home.css">
+	<script src="./home.js" defer></script>
 </head>
 <body>
 	<header class="header">
@@ -19,7 +20,7 @@
 		<!-- Elemento: Luz -->
 		<section class="device">
 			<div class="device-svg">
-				<img src="svg/luz.svg" alt="Luz del salón">
+				<?php //insert_svg("svg/luz.svg"); ?>
 			</div>
 			<h2>Luz Salón</h2>
 			<button class="device-btn on">Encendida</button>
@@ -28,7 +29,7 @@
 		<!-- Elemento: Persiana -->
 		<section class="device">
 			<div class="device-svg">
-				<img src="svg/persiana.svg" alt="Persiana dormitorio">
+				<?php insert_svg("svg/persiana.svg"); ?>
 			</div>
 			<h2>Persiana Dormitorio</h2>
 			<button class="device-btn off">Bajada</button>
@@ -37,7 +38,7 @@
 		<!-- Elemento: Caldera -->
 		<section class="device">
 			<div class="device-svg">
-				<img src="svg/caldera.svg" alt="Caldera">
+				<?php //insert_svg("svg/caldera.svg"); ?>
 			</div>
 			<h2>Caldera</h2>
 			<button class="device-btn on">Activa</button>
@@ -46,15 +47,15 @@
 		<!-- Elemento: Calefacción -->
 		<section class="device">
 			<div class="device-svg">
-				<img src="svg/calefaccion.svg" alt="Calefacción">
+				<?php //insert_svg("svg/calefaccion.svg"); ?>
 			</div>
 			<h2>Calefacción</h2>
 			<button class="device-btn off">Apagada</button>
 		</section>
 	</main>
 	
-	<?php
-		getAllDevices();
-	?>
+	<div class="invisible">
+		<?php get_all_devices(); ?>
+	</div>
 </body>
 </html>
