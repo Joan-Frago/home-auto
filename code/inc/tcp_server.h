@@ -18,5 +18,6 @@ int process_recv(char *recv_buf, char *resp_buf);
 
 int read_request(req_t *, char *);
 int call_target_function(req_t *, char *resp_buf);
+int escape_buf(char *buf, int buf_len);
 
 #endif

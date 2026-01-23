@@ -93,6 +93,9 @@ int talk(int *sockfd){
 			printf("Error: Could not process received data from client\n");
 		}
 
+		// Escape response buffer
+		escape_buf(resp_buf, strlen(resp_buf));
+
 		// Send a response
 		send(*sockfd, resp_buf, strlen(resp_buf), 0);
 
@@ -183,6 +186,23 @@ int call_target_function(req_t *req, char *resp_buf){
 			return -1;
 		}
 	}
+
+	return 0;
+}
+
+int escape_buf(char *buf, int buf_len){
+	char tmp_buf[MESSAGE_SIZE];
+	int idx_buf, idx_tmp_buf = 0;
+
+	int c;
+	while(idx_tmp_buf < MESSAGE_SIZE && (c = buf[idx_buf++])!='\0'){
+		if(c == '\n' || c == '\t' || c == '\r' || c == '\"'){
+			tmp_buf[idx_tmp_buf++] = '\\';
+		}
+		tmp_buf[idx_tmp_buf++] = c;
+	}
+
+	strcpy(buf, tmp_buf);
 
 	return 0;
 }
