@@ -2,13 +2,9 @@
 	<device id="1">
 		<name>Calefacció</name>
 		<description>Càrrega calefacció</description>
-		<historify active="0" period="1"></historify> <!-- period as seconds -->
-		<fire active="1" period="12"> <!-- period as hours -->
-			<!-- Start the device at a specified date or time period -->
+		<historify active="0" period="1"></historify>
+		<fire active="1" period="12">
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
 				<start>12/02</start>
 				<end>12/03/2027</end>
 			</date>
@@ -21,13 +17,9 @@
 	<device id="2">
 		<name>Device 2</name>
 		<description></description>
-		<historify active="0" period="1"></historify> <!-- period as seconds -->
-		<fire active="1" period="12"> <!-- period as hours -->
-			<!-- Start the device at a specified date or time period -->
+		<historify active="0" period="1"></historify>
+		<fire active="1" period="12">
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
 				<start>12/02</start>
 				<end>12/03/2027</end>
 			</date>
@@ -40,20 +32,14 @@
 	<device id="3">
 		<name>Device 3</name>
 		<description></description>
-		<historify active="0" period="1"></historify> <!-- period as seconds -->
-		<fire active="1" period="12"> <!-- period as hours -->
-			<!-- Start the device at a specified date or time period -->
+		<historify active="0" period="1"></historify>
+		<fire active="1" period="12">
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
 				<start>12/02</start>
 				<end>12/03/2027</end>
 			</date>
 		</fire>
 
-		<!-- In this case there is no relay associated with the device,
-			 NO EMPTY ENTRY MUST BE PLACED -->
 		<digital_input id_pin="DI2.1" pin="2.1"></digital_input>
 	</device>
 </devices>
