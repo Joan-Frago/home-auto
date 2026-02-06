@@ -19,35 +19,12 @@
 
 		<section class="device">
 			<div class="device-svg">
-				<?php //insert_svg("svg/luz.svg"); ?>
-			</div>
-			<h2>Luz Salón</h2>
-			<button class="device-btn on">Encendida</button>
-		</section>
-
-		<section class="device">
-			<div class="device-svg">
 				<?php insert_svg("svg/persiana.svg"); ?>
 			</div>
 			<h2>Persiana Dormitorio</h2>
 			<button class="device-btn off">Bajada</button>
 		</section>
 
-		<section class="device">
-			<div class="device-svg">
-				<?php //insert_svg("svg/caldera.svg"); ?>
-			</div>
-			<h2>Caldera</h2>
-			<button class="device-btn on">Activa</button>
-		</section>
-
-		<section class="device">
-			<div class="device-svg">
-				<?php //insert_svg("svg/calefaccion.svg"); ?>
-			</div>
-			<h2>Calefacción</h2>
-			<button class="device-btn off">Apagada</button>
-		</section>
 	</main>
 	
 	<div class="invisible">

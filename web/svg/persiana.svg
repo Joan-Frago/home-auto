@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
    viewBox="0 0 500 450"
@@ -8,38 +7,32 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs" />
-  <g id="persiana-group">
-    <rect
-       id="rect-ext"
-       width="490"
-       height="440"
-       stroke-width="10"
-       stroke="#000000"
-       x="5"
-       y="5"
-       fill="#ffffff"
-	   fill-opacity="1" />
-    <rect id="lama-1" width="460" height="15" fill="#000000" x="20" y="20" />
-    <rect id="lama-2" width="460" height="15" fill="#000000" x="20" y="40" />
-    <rect id="lama-3" width="460" height="15" fill="#000000" x="20" y="60" />
-    <rect id="lama-4" width="460" height="15" fill="#000000" x="20" y="80" />
-    <rect id="lama-5" width="460" height="15" fill="#000000" x="20" y="100" />
-    <rect id="lama-6" width="460" height="15" fill="#000000" x="20" y="120" />
-    <rect id="lama-7" width="460" height="15" fill="#000000" x="20" y="140" />
-    <rect id="lama-8" width="460" height="15" fill="#000000" x="20" y="160" />
-    <rect id="lama-9" width="460" height="15" fill="#000000" x="20" y="180" />
-    <rect id="lama-10" width="460" height="15" fill="#000000" x="20" y="200" />
-    <rect id="lama-11" width="460" height="15" fill="#000000" x="20" y="220" />
-    <rect id="lama-12" width="460" height="15" fill="#000000" x="20" y="240" />
-    <rect id="lama-13" width="460" height="15" fill="#000000" x="20" y="260" />
-    <rect id="lama-14" width="460" height="15" fill="#000000" x="20" y="280" />
-    <rect id="lama-15" width="460" height="15" fill="#000000" x="20" y="300" />
-    <rect id="lama-16" width="460" height="15" fill="#000000" x="20" y="320" />
-    <rect id="lama-17" width="460" height="15" fill="#000000" x="20" y="340" />
-    <rect id="lama-18" width="460" height="15" fill="#000000" x="20" y="360" />
-    <rect id="lama-19" width="460" height="15" fill="#000000" x="20" y="380" />
-    <rect id="lama-20" width="460" height="15" fill="#000000" x="20" y="400" />
-    <rect id="lama-21" width="460" height="15" fill="#000000" x="20" y="420" />
+  <g id="persiana-1">
+    <rect id="rect-ext" width="490" height="440" stroke-width="10" stroke="#000000" x="5" y="5" fill="#ffffff" fill-opacity="1" />
+
+	<g id="lamas">
+		<rect id="lama-1" width="460" height="15" fill="#000000" x="20" y="20" />
+		<rect id="lama-2" width="460" height="15" fill="#000000" x="20" y="40" />
+		<rect id="lama-3" width="460" height="15" fill="#000000" x="20" y="60" />
+		<rect id="lama-4" width="460" height="15" fill="#000000" x="20" y="80" />
+		<rect id="lama-5" width="460" height="15" fill="#000000" x="20" y="100" />
+		<rect id="lama-6" width="460" height="15" fill="#000000" x="20" y="120" />
+		<rect id="lama-7" width="460" height="15" fill="#000000" x="20" y="140" />
+		<rect id="lama-8" width="460" height="15" fill="#000000" x="20" y="160" />
+		<rect id="lama-9" width="460" height="15" fill="#000000" x="20" y="180" />
+		<rect id="lama-10" width="460" height="15" fill="#000000" x="20" y="200" />
+		<rect id="lama-11" width="460" height="15" fill="#000000" x="20" y="220" />
+		<rect id="lama-12" width="460" height="15" fill="#000000" x="20" y="240" />
+		<rect id="lama-13" width="460" height="15" fill="#000000" x="20" y="260" />
+		<rect id="lama-14" width="460" height="15" fill="#000000" x="20" y="280" />
+		<rect id="lama-15" width="460" height="15" fill="#000000" x="20" y="300" />
+		<rect id="lama-16" width="460" height="15" fill="#000000" x="20" y="320" />
+		<rect id="lama-17" width="460" height="15" fill="#000000" x="20" y="340" />
+		<rect id="lama-18" width="460" height="15" fill="#000000" x="20" y="360" />
+		<rect id="lama-19" width="460" height="15" fill="#000000" x="20" y="380" />
+		<rect id="lama-20" width="460" height="15" fill="#000000" x="20" y="400" />
+		<rect id="lama-21" width="460" height="15" fill="#000000" x="20" y="420" />
+	</g>
 	
 	<!-- Blank space to show/hide -->
 	<rect id="blank" width="480" height="430" fill="#ffffff" x="10" y="10" class="invisible" />
