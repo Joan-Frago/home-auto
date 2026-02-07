@@ -23,12 +23,20 @@ static int read_device_digital_input(struct Device *device, xmlXPathContext *);
  * Set all devices before running.
  * Read from devices xml and init Devices.
  */
-int set_devices(struct Device devices[MAX_DEVICES]){
+int set_devices(device_t devices[MAX_DEVICES]){
 	printf("Setting devices...\n");
 
+	// dynamic configuration
 	if(read_devices_xml(devices) == -1){
 		printf("Error: Could not read devices xml.\n");
 		return -1;
+	}
+
+	// static configuration
+	int i;
+	for(i=0; i<MAX_DEVICES; i++){
+		devices[i].hist.remaining_ticks = devices[i].hist.period;
+		devices[i].fire.remaining_ticks = devices[i].hist.period*3600;
 	}
 
 	printf("All devices have been set.\n\n");

@@ -15,7 +15,8 @@ typedef struct DigitalInput{
 
 typedef struct Historify{
 	int active;
-	int period;
+	int period; // number of seconds
+	int remaining_ticks; // seconds left to historify
 } historify_t;
 
 typedef struct Date{
@@ -25,12 +26,15 @@ typedef struct Date{
 
 typedef struct Fire_Device{
 	int active;
-	int period;
-	date_t date;
+	int period; // number of hours
+	int remaining_ticks; // hours left to historify
 
+	date_t date;
 } fire_device_t;
 
-int relay_write(struct Relay *, int);
-int digital_read(struct DigitalInput *, int *);
+int relay_write(rl_t *, int);
+int relay_read(rl_t *);
+
+int digital_read(di_t *);
 
 #endif
