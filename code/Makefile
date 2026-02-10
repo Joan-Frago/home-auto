@@ -18,7 +18,7 @@ native: CC = gcc
 native: $(TARGET)
 	@echo "\n --> Compiled for x86-64"
 
-arm: CC = arm-linux-gnueabi-gcc
+arm: CC = arm-linux-gnueabihf-gcc
 arm: $(TARGET)
 	@echo "\n --> Compiled for ARM"
 
