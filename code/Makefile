@@ -1,3 +1,5 @@
+CC = gcc
+
 SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
@@ -12,13 +14,21 @@ XML2_LIBS = $(shell xml2-config --libs)
 CFLAGS = -Wall -I$(INCDIR) $(XML2_CFLAGS)
 LDFLAGS = $(XML2_LIBS)
 
+native: CC = gcc
+native: $(TARGET)
+	@echo "\n --> Compiled for x86-64"
+
+arm: CC = arm-linux-gnueabi-gcc
+arm: $(TARGET)
+	@echo "\n --> Compiled for ARM"
+
 $(TARGET) : $(OBJS)
 	@mkdir -p $(BINDIR)
-	gcc $(CFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
-	gcc -c -MD $(CFLAGS) $< -o $@
+	$(CC) -c -MD $(CFLAGS) $< -o $@
 
 -include $(OBJDIR)/*.d
 
