@@ -20,10 +20,13 @@ int load_config(void){
 	}
 
 	char buf[MAX_VAR_SIZE];
-	int buf_idx, var_idx = 0;
+	int buf_idx = 0;
+	int var_idx = 0;
 
 	int c;
 	while((c = getc(fp)) != EOF && buf_idx < MAX_VAR_SIZE - 1){
+		if(c == '\r') continue; // Ignore carriage return
+
 		//printf("Read char: %c\n",c);
 		if(c != '\n' && c != EOF){
 			if(c != '='){

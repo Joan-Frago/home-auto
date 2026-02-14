@@ -8,7 +8,7 @@
 #include "../inc/device.h"
 
 static void *core(void*);
-static void exit_handler();
+static void exit_handler(int);
 
 static int historify_device(device_t *device);
 static int fire_device(device_t *device);
@@ -45,7 +45,7 @@ int main(){
 	return 0;
 }
 
-static void exit_handler(){
+static void exit_handler(int signal){
 	printf("\nProgram terminated\n");
 	printf("Exiting application...\n");
 

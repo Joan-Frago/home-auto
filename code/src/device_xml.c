@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "../inc/device_xml.h"
 
 static device_xml_t *alloc_devices_xml_file(void);
