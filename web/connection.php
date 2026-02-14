@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 function server_connect(){
 	write2console("Connecting to TCP server...");
 
-	$address = 'msi-joan';
+	$address = 'msi';
 	//$address = 'home-unipi';
 	$service_port = 8080;
 
