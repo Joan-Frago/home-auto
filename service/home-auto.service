@@ -1,16 +1,20 @@
 [Unit]
 # A short description of the service (required)
-Description=Home-Auto api to interact with unipi
+Description=The Home-Auto server
 
 # Defines the order in which units are started. This example makes the service start after the network is up.
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-# The command to start the service (required)
-ExecStart=/opt/home-auto/venv310/bin/python /opt/home-auto/code/homeApi.py
+User=joan
+Group=joan
 
 # Directory where the service should run from (optional)
-WorkingDirectory=/opt/home-auto/code/
+WorkingDirectory=/opt/dev/home-auto/code/
+
+# The command to start the service (required)
+ExecStart=/opt/dev/home-auto/code/bin/unipi_main
 
 # Defines the restart behavior. Example: restart on failure
 Restart=always
