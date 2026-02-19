@@ -6,7 +6,7 @@ function server_connect(){
 	write2console("Connecting to TCP server...");
 
 	$address = 'msi';
-	//$address = 'home-unipi';
+	//$address = 'unipi';
 	$service_port = 8080;
 
 	$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);

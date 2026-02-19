@@ -30,5 +30,9 @@
 	<div class="invisible">
 		<?php get_all_devices(); ?>
 	</div>
+
+	<script>
+		load_pin_data();
+	</script>
 </body>
 </html>

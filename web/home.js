@@ -164,3 +164,25 @@ function xml2json(xml, tab) {
 	var json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
 	return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
 }
+
+function get_device_pin_status(){
+	try {
+    	const response = fetch('get_device_pin_status.php', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'text/plain',
+		},
+		body: data
+		});
+
+		const result = response;
+		console.log('Success:', result);
+	} catch (error) {
+		console.error('Error:', error);
+	}
+}
+
+
+function load_pin_data(){
+	setInterval(get_device_pin_status, 3000);
+}
