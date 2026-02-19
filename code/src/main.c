@@ -13,8 +13,6 @@ static void exit_handler(int);
 static int historify_device(device_t *device);
 static int fire_device(device_t *device);
 
-struct Device devices[MAX_DEVICES];
-
 int main(){
 	signal(SIGINT, exit_handler);
 	signal(SIGTERM, exit_handler);
@@ -27,7 +25,7 @@ int main(){
 	}
 
 	// Set all devices before running (read from xml file and init Devices (Relay or Digital Input or Both))
-	if(set_devices(devices) == -1){
+	if(set_devices() == -1){
 		printf("Error: set_devices function returned with error code -1\n");
 		return -1;
 	}
@@ -64,6 +62,8 @@ static void exit_handler(int signal){
  */
 static void *core(void* arg){
 	printf("Core Thread ID is %lu\n",(unsigned long)pthread_self());
+
+	device_t *devices = get_devices_arr();
 
 	for(;;){
 		int i;

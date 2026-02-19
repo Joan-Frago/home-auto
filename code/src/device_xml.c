@@ -67,3 +67,14 @@ device_xml_t *open_devices_xml_file(void){
 void close_devices_xml_file(device_xml_t *dxml){
 	free_devices_xml_file(dxml);
 }
+
+xmlNode *find_child_node(xmlNode *parent, xmlChar *node_name) {
+    xmlNodePtr cur = parent->xmlChildrenNode;
+    while (cur != NULL) {
+        if (xmlStrcmp(cur->name, node_name) == 0) {
+            return cur;
+        }
+        cur = cur->next;
+    }
+    return NULL;
+}

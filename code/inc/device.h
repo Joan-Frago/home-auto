@@ -24,9 +24,14 @@ typedef struct Device{
 	di_t di;
 } device_t;
 
-int set_devices(struct Device devices[MAX_DEVICES]);
+int set_devices();
+
+device_t *get_devices_arr(void);
+device_t *get_device_by_id(int id);
 
 int get_all_devices(char *resp_buf);
+int get_device_pin_status(char *resp_buf, xmlNode *);
+
 int set_device(xmlNode *);
 
 #endif

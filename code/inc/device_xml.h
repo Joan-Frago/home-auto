@@ -17,4 +17,6 @@ typedef struct DeviceXml{
 device_xml_t *open_devices_xml_file(void);
 void close_devices_xml_file(device_xml_t *);
 
+xmlNode *find_child_node(xmlNode *parent, xmlChar *node_name);
+
 #endif

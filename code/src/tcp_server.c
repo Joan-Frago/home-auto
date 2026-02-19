@@ -192,6 +192,11 @@ static int call_target_function(req_t *req, char *resp_buf){
 			printf("Error: get_all_devices returned -1\n");
 			return -1;
 		}
+	} else if (strcmp(req->function, "get_device_pin_status")){
+		if(get_device_pin_status(resp_buf, req->data) == -1){
+			printf("Error: get_device_pin_status returned -1\n");
+			return -1;
+		}
 	}
 
 	return 0;
@@ -200,7 +205,7 @@ static int call_target_function(req_t *req, char *resp_buf){
 static int escape_buf(char *buf, int buf_len){
 	char tmp_buf[MESSAGE_SIZE];
 	int idx_buf = 0;
-  int idx_tmp_buf = 0;
+	int idx_tmp_buf = 0;
 
 	int c;
 	while(idx_tmp_buf < MESSAGE_SIZE && (c = buf[idx_buf++])!='\0'){
