@@ -41,6 +41,16 @@ int set_devices(){
 	for(i=0; i<MAX_DEVICES; i++){
 		devices[i].hist.remaining_ticks = devices[i].hist.period;
 		devices[i].fire.remaining_ticks = devices[i].hist.period*3600;
+
+		if(devices[i].rl.id_pin){
+			devices[i].rl.value = relay_read(&devices[i].rl);
+			devices[i].rl.last_value = devices[i].rl.value;
+		}
+
+		if(devices[i].di.id_pin){
+			devices[i].di.value = digital_read(&devices[i].di);
+			devices[i].di.last_value = devices[i].di.value;
+		}
 	}
 
 	LOG_INFO("All devices have been set.");

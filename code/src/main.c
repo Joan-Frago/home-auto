@@ -8,13 +8,15 @@
 #include "../inc/device.h"
 #include "../inc/logger.h"
 #include "../inc/loggerconf.h"
+#include "../inc/historify.h"
+
+#define LOG_FIRE
 
 #define LOG_FILE "log/home.log"
 
 static void *core(void*);
 static void exit_handler(int);
 
-static int historify_device(device_t *device);
 static int fire_device(device_t *device);
 
 int main(){
@@ -25,7 +27,7 @@ int main(){
     logger_initFileLogger(LOG_FILE, 1024 * 1024, 5);
     logger_setLevel(LogLevel_DEBUG);
 
-	LOG_INFO("Application PID is %ld\n\n",(long)getpid());
+	LOG_INFO("Application PID is %ld",(long)getpid());
 
 	if(load_config() == -1){
 		LOG_ERROR("load_config returned -1. Error loading configuration");
@@ -85,45 +87,6 @@ static void *core(void* arg){
 	return 0;
 }
 
-static int historify_device(device_t *device){
-	if(device->hist.active == 1){
-		if(device->hist.period == 0){
-			// TODO: Historify all changes
-			// e.g. A relay output state change
-			// e.g. A digital input state change
-		}
-		else{
-			if(device->hist.remaining_ticks == 1){
-				// TODO: Historify
-				
-				// RELAY
-				if(device->rl.id_pin){
-					int rl_val = relay_read(&device->rl);
-					if(rl_val == -1)
-						return -1;
-
-					LOG_DEBUG("Historify device \"%s\" Relay \"%s\". Value = %d.",device->name, device->rl.id_pin, rl_val);
-				}
-
-				// DIGITAL INPUT
-				if(device->di.id_pin){
-					int di_val = digital_read(&device->di);
-					if(di_val == -1)
-						return -1;
-
-					LOG_DEBUG("Historify device \"%s\" DigitalInput \"%s\". Value = %d.",device->name, device->di.id_pin, di_val);
-				}
-
-				device->hist.remaining_ticks = device->hist.period;
-			}
-			else{
-				device->hist.remaining_ticks--;
-			}
-		}
-	}
-	return 0;
-}
-
 static int fire_device(device_t *device){
 	if(device->fire.active == 1){
 		if(device->fire.period == 0){
@@ -138,7 +101,9 @@ static int fire_device(device_t *device){
 
 					}
 
+					#ifdef LOG_FIRE
 					LOG_DEBUG("Device \"%s\" with Relay \"%s\" fired.",device->name, device->rl.id_pin);
+					#endif
 				}
 
 				device->fire.remaining_ticks = device->fire.period;
