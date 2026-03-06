@@ -2,7 +2,7 @@
 	<device id="1">
 		<name>Calefacció</name>
 		<description>Càrrega calefacció</description>
-		<historify active="1" period="4"></historify>
+		<historify active="1" period="0"></historify>
 		<fire active="1" period="12">
 			<date>
 				<start>12/02</start>
@@ -17,7 +17,7 @@
 	<device id="2">
 		<name>Device 2</name>
 		<description></description>
-		<historify active="1" period="1"></historify>
+		<historify active="1" period="0"></historify>
 		<fire active="0" period="12">
 			<date>
 				<start>12/02</start>
@@ -32,7 +32,7 @@
 	<device id="3">
 		<name>Device 3</name>
 		<description></description>
-		<historify active="1" period="2"></historify>
+		<historify active="1" period="0"></historify>
 		<fire active="0" period="12">
 			<date>
 				<start>12/02</start>

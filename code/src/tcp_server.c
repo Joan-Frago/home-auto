@@ -205,11 +205,12 @@ static int call_target_function(req_t *req, char *resp_buf){
 			return -1;
 		}
 	} else if(strcmp(req->function, "get_device_pin_status") == 0){
-		LOG_DEBUG("Request on get_device_pin_status");
 		if(get_device_pin_status(resp_buf, req->data) == -1){
 			LOG_ERROR("Error: get_device_pin_status returned -1");
 			return -1;
 		}
+	} else {
+		LOG_INFO("Request not found: \"%s\"", req->function);
 	}
 
 	return 0;

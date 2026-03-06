@@ -17,12 +17,16 @@
 	</header>
 	<main class="house-grid">
 
-		<section class="device">
+		<section id="1" class="device">
 			<div class="device-svg">
 				<?php insert_svg("svg/persiana.svg"); ?>
 			</div>
 			<h2>Persiana Dormitorio</h2>
 			<button class="device-btn off">Bajada</button>
+			<div>
+				<p>Input: </p>
+				<p>Output: </p>
+			</div>
 		</section>
 
 	</main>

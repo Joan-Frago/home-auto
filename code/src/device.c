@@ -7,6 +7,7 @@
 #include "../inc/tcp_server.h"
 #include "../inc/device_xml.h"
 #include "../inc/logger.h"
+#include "../inc/sb.h"
 
 device_t devices[MAX_DEVICES];
 
@@ -299,15 +300,32 @@ int get_device_pin_status(char *resp_buf, xmlNode *data){
 		return -1;
 	}
 
+	StringBuilder *sb = sb_create();
+
+	sb_appendf(sb, "<device id=\"%d\">", device->id);
+
 	// TODO: construct response
-	if(device->rl.id_pin){
+	if(device->rl.id_pin)
+		sb_appendf(sb, "<relay id_pin=\"%s\" pin=\"%s\" value=\"%d\"></relay>", device->rl.id_pin, device->rl.pin, device->rl.value);
 
-	}
-	if(device->di.id_pin){
-
-	}
+	if(device->di.id_pin)
+		sb_appendf(sb, "<digital_input id_pin=\"%s\" pin=\"%s\" value=\"%d\"></digital_input>", device->di.id_pin, device->di.pin, device->di.value);
 	
-	sprintf(resp_buf, "rl state: %d, di state: %d", device->rl.value, device->di.value);
+	sb_append(sb, "</device>");
+
+	/*
+	* <device id="...">
+	*	<relay id_pin="..." pin="..." value="..."></relay>
+	*	<digital_input id_pin="..." pin="..." value="..."></digital_input>
+	* </device>
+	*/
+
+	char *temp = sb_concat(sb);
+	if(temp){
+		strncpy(resp_buf, temp, MESSAGE_SIZE);
+		free(temp);
+	}
+	sb_free(sb);
 
 	return 0;
 }

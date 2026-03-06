@@ -23,7 +23,7 @@ async function get_all_devices(){
 		// execute js function here with the data returned by the server.
 		set_devices(data);
 
-		console.log(data);
+		//console.log(data);
 	} catch (error) {
 		console.error("Error: ", error);
 	}
@@ -37,7 +37,7 @@ function set_devices(devices_xml_str) {
 	console.log(devices_json);
 
 	devices_json = JSON.parse(devices_json);
-	console.log(devices_json.devices);
+	console.log(devices_json);
 }
 
 /*	This work is licensed under Creative Commons GNU LGPL License.
@@ -199,40 +199,61 @@ function xml2json(xml, tab) {
 async function get_device_pin_status(){
 
 	// loop through devices in the document and get their actual values
-	
-	let id = 1;
-	let data = `<device id=\"${id}\"></device>`;
+	const devices_arr = document.querySelectorAll("section.device");
 
-	let body = {
-		xml_function: "get_device_pin_status_xml",
-		has_data: true,
-		data: data
-	};
+	devices_arr.forEach(async (device) => {
+		//let id = 1;
+		let data = `<device id=\"${device.id}\"></device>`;
 
-	try {
-    	const response = await fetch("./request/make_request.php", {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(body)
-		});
+		let body = {
+			xml_function: "get_device_pin_status_xml",
+			has_data: true,
+			data: data
+		};
 
-		if(!response.ok){
-			throw new Error("In \"get_device_pin_status\" function: Could not fetch devices pin status");
+		try {
+			const response = await fetch("./request/make_request.php", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(body)
+			});
+
+			if(!response.ok){
+				throw new Error("In \"get_device_pin_status\" function: Could not fetch devices pin status");
+			}
+
+			const data = await response.text();
+
+			// execute js function here with the data returned by the server.
+			// example:
+			// set_devices(data)
+
+			console.log("--- get_device_pin_status ---");
+			//console.log(data);
+
+			let parser = new DOMParser();
+			let xml_doc = parser.parseFromString(data, "application/xml");
+
+			let json = xml2json(xml_doc, "");
+			console.log(json);
+
+			json = JSON.parse(json);
+			console.log(json);
+
+			update_device_pin_status(json);
+		} catch (error) {
+			console.error("Error: ", error);
 		}
+	});
+}
 
-		const data = await response.text();
+function update_device_pin_status(device){
+	const element = document.getElementById(device.device["@id"]);
+	console.log(element);
 
-		// execute js function here with the data returned by the server.
-		// example:
-		// set_devices(data)
 
-		console.log("--- get_device_pin_status ---");
-		console.log(data);
-	} catch (error) {
-		console.error("Error: ", error);
-	}
 }
 
 function load_pin_data(){
