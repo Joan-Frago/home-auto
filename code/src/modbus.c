@@ -1,5 +1,8 @@
 #include "../inc/unipi_control.h"
 #include "../inc/logger.h"
+#include "../inc/config.h"
+
+#include <stdlib.h>
 #include <modbus.h>
 
 void analyzer_set_registers(reg_t registers[REGISTER_COUNT]){
@@ -15,6 +18,15 @@ uint32_t modbus_read(mb_t modbus, reg_t reg){
 
 	if(modbus.connection_type == TCP){
 		mb = modbus_new_tcp(modbus.tcp_addr, modbus.tcp_port);
+	}
+	else if(modbus.connection_type == RS485){
+		mb = modbus_new_rtu(
+			get_var_value(MODBUS_RTU_DEVICE),
+			atoi(get_var_value(MODBUS_RTU_BAUD)),
+			(char)get_var_value(MODBUS_RTU_PARITY),
+			atoi(get_var_value(MODBUS_RTU_DATABIT)),
+			atoi(get_var_value(MODBUS_RTU_STOPBIT))
+		);
 	}
 
 	modbus_set_slave(mb, modbus.slave);
