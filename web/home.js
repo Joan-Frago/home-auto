@@ -166,6 +166,12 @@ texts = {
 	BUTTON_OFF: "Off"
 };
 
+let devices = [];
+
+function get_local_device(id){
+	return devices.find(d => d["@id"] == id);
+}
+
 async function set_all_devices(){
 	// loop through devices in the document and get their config
 	const devices_arr = document.querySelectorAll("section.device");
@@ -195,7 +201,18 @@ async function set_all_devices(){
 			const data = await response.text();
 
 			// execute js function here with the data returned by the server.
-			set_device(data);
+			let parser = new DOMParser();
+			let device_xml_doc = parser.parseFromString(data, "application/xml");
+
+			let device_json = xml2json(device_xml_doc, "");
+			device_json = JSON.parse(device_json);
+
+			if(is_error(device_json)){
+				console.error(device_json.error);
+				return;
+			}
+
+			set_device(device_json.device);
 
 		} catch (error) {
 			console.error("Error: ", error);
@@ -203,34 +220,24 @@ async function set_all_devices(){
 	});
 }
 
-function set_device(device_xml_str) {
-	let parser = new DOMParser();
-	let device_xml_doc = parser.parseFromString(device_xml_str, "application/xml");
-
-	let device_json = xml2json(device_xml_doc, "");
-	device_json = JSON.parse(device_json);
-
-	if(is_error(device_json)){
-		console.error(device_json.error);
-		return;
-	}
-
-	let device = device_json.device;
-
+function set_device(device) {
 	document.getElementById(device["@id"]+"_title").textContent = device.name;
 	document.getElementById(device["@id"]+"_description").textContent = device.description;
 
 	construct_device(device);
 	device.svg.onclick = () => update_pin_state(device);
+
+	devices.push(device);
 }
 
 async function update_pin_state(device){
-	// is di really updating the real object?
+	if(!device.has_rl() || !device.has_di()){
+		console.log("Cannot change the state of \""+device.name+"\" device");
+		return;
+	}
 	let new_state = 0;
-	if(device.has_rl()){
-		if(device.relay["@value"] == 0){
-			new_state = 1;
-		}
+	if(device.digital_input["@value"] == 0){
+		new_state = 1;
 	}
 
 	let data = `<device id=\"${device["@id"]}\" new_state=\"${new_state}\"></device>`;
@@ -271,6 +278,7 @@ async function update_pin_state(device){
 			return;
 		}
 
+		console.log(json);
 		console.log(device);
 
 	} catch (error) {
@@ -349,10 +357,14 @@ function update_device(device){
 }
 
 function update_device_pin_status(device){
+	const local_device = get_local_device(device["@id"]);
+
 	if(device.has_di()){
+		local_device.digital_input["@value"] = device.digital_input["@value"];
 	}
 
 	if(device.has_rl()){
+		local_device.relay["@value"] = device.relay["@value"];
 	}
 
 	if(device.has_mb()){

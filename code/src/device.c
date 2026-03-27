@@ -470,7 +470,7 @@ int update_pin_state(char *resp_buf, xmlNode *data){
 	if(new_state == NULL){
 		LOG_ERROR("Error: device.c : Could not read new_state property from node");
 		return -1;
-}
+	}
 
 	device_t *device = get_device_by_id(tmp_dev.id);
 	if(device == NULL)
@@ -478,6 +478,9 @@ int update_pin_state(char *resp_buf, xmlNode *data){
 
 	relay_write(&device->rl, atoi(new_state));
 	// it is independent of historification so I don't need to manually update rl.value nor rl.last_value
+
+	char *temp = "<update><status>ok</status></update>";
+	strncpy(resp_buf, temp, MESSAGE_SIZE);
 
 	return 0;
 }
