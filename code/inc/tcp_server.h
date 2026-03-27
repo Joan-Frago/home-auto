@@ -2,7 +2,7 @@
 
 #define TCP_SERVER_H
 
-#include <libxml2/libxml/parser.h>
+#include <libxml/parser.h>
 
 #define MESSAGE_SIZE 4096
 

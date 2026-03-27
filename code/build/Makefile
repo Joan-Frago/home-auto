@@ -1,9 +1,9 @@
 CC = gcc
 
-SRCDIR = src
+SRCDIR = ../src
+INCDIR = ../inc
 OBJDIR = obj
-BINDIR = bin
-INCDIR = inc
+BINDIR = ../bin
 
 TARGET = $(BINDIR)/unipi_main
 OBJS   = $(OBJDIR)/main.o \
@@ -23,10 +23,11 @@ OBJS   = $(OBJDIR)/main.o \
 XML2_CFLAGS = $(shell xml2-config --cflags)
 XML2_LIBS = $(shell xml2-config --libs)
 
-LIBMODBUS_CFLAGS = $(shell pkg-config --cflags --libs libmodbus)
+LIBMODBUS_CFLAGS = $(shell pkg-config --cflags libmodbus)
+LIBMODBUS_LIBS = $(shell pkg-config --libs libmodbus)
 
 CFLAGS = -Wall -I$(INCDIR) $(XML2_CFLAGS) $(LIBMODBUS_CFLAGS)
-LDFLAGS = $(XML2_LIBS)
+LDFLAGS = $(XML2_LIBS) $(LIBMODBUS_LIBS)
 
 native: CC = gcc
 native: $(TARGET)

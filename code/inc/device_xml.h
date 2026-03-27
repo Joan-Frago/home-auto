@@ -1,7 +1,7 @@
 #ifndef DEVICE_XML_H
 
-#include <libxml2/libxml/tree.h>
-#include <libxml2/libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpath.h>
 
 #define DEVICE_XML_H
 

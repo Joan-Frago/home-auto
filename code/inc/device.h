@@ -4,10 +4,10 @@
 
 #include "./unipi_control.h"
 
-#include <libxml2/libxml/parser.h>
-#include <libxml2/libxml/xpath.h>
-#include <libxml2/libxml/tree.h>
-#include <libxml2/libxml/xpath.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpath.h>
 
 #define DEVICE_H
 
