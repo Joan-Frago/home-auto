@@ -15,4 +15,4 @@ home-auto-web/config/conf.json
 
 # object files and binaries
 code/bin/*
-code/obj/*
+code/build/obj/*
