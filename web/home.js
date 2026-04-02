@@ -315,7 +315,7 @@ async function get_device_pin_status(){
 		let data = `<device id=\"${device.id}\"></device>`;
 
 		let body = {
-			xml_function: "get_device_pin_status_xml",
+			xml_function: "get_device_xml",
 			has_data: true,
 			data: data
 		};

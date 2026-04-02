@@ -360,55 +360,6 @@ int get_all_devices(char *resp_buf){
 	return 0;
 }
 
-int get_device_pin_status(char *resp_buf, xmlNode *data){
-	// extract device id from the xml node
-	
-	xmlNode *dev_node = find_child_node(data, BAD_CAST "device");
-	if(dev_node == NULL){
-		LOG_ERROR("Error: device.c : Did not find a child node called \"device\"");
-		return -1;
-	}
-
-	device_t tmp_dev;
-	tmp_dev.id = read_device_id(dev_node);
-	
-	device_t *device = get_device_by_id(tmp_dev.id);
-	if(device == NULL){
-		LOG_ERROR("Error: device.c : Could not get device by id \"%d\"", tmp_dev.id);
-		return -1;
-	}
-
-	StringBuilder *sb = sb_create();
-
-	sb_appendf(sb, "<device id=\"%d\" name=\"%s\" description=\"%s\" type=\"%s\">", device->id, device->name, device->description, device->type);
-
-	if(device->has_rl == 1)
-		sb_appendf(sb, "<relay id_pin=\"%s\" pin=\"%s\" value=\"%d\"></relay>", device->rl.id_pin, device->rl.pin, device->rl.value);
-
-	if(device->has_di == 1)
-		sb_appendf(sb, "<digital_input id_pin=\"%s\" pin=\"%s\" value=\"%d\"></digital_input>", device->di.id_pin, device->di.pin, device->di.value);
-
-	if(device->has_mb == 1){
-		sb_append(sb, "<modbus>");
-		int i;
-		for(i=0; i<REGISTER_COUNT; i++){
-			sb_appendf(sb, "<register name=\"%s\" symbol=\"%s\" value=\"%u\"></register>", device->mb.registers[i].name, device->mb.registers[i].symbol, device->mb.registers[i].value);
-		}
-		sb_append(sb, "</modbus>");
-	}
-	
-	sb_append(sb, "</device>");
-
-	char *temp = sb_concat(sb);
-	if(temp){
-		strncpy(resp_buf, temp, MESSAGE_SIZE);
-		free(temp);
-	}
-	sb_free(sb);
-
-	return 0;
-}
-
 int set_device(xmlNode *dev_node){
 	LOG_DEBUG("Setting device...\n");
 

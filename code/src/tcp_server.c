@@ -210,14 +210,6 @@ static int call_target_function(req_t *req, char *resp_buf){
 
 			goto error;
 		}
-	} else if(strcmp(req->function, "get_device_pin_status") == 0){
-		if(get_device_pin_status(resp_buf, req->data) == -1){
-			char *msg = "Error: get_device_pin_status returned -1";
-			LOG_ERROR("%s", msg);
-			err_msg = msg;
-
-			goto error;
-		}
 	} else if(strcmp(req->function, "get_device") == 0){
 		if(get_device(resp_buf, req->data) == -1){
 			char *msg = "Error: get_device returned -1";
