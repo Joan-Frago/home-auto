@@ -6,11 +6,13 @@
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
-				<start>12/02</start>
-				<end>12/03/2027</end>
+				<!-- Each entry can be formatted as: dd, dd/mm, dd/mm/yyyy -->
+				<!-- The period attribute sets the hourly interval -->
+				<!-- The duration attribute sets the amount of hours the relay will be on -->
+				<!-- The start attribute sets the time of day (24h format) at which the relay will start -->
+				<!-- Multiple entries can be used, the system must use the one that bests matches the entry value -->
+				<entry period="24" duration="5" start="00">01/01</entry>
+				<entry period="48">01/06</entry>
 			</date>
 		</fire>
 
@@ -25,11 +27,8 @@
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
-				<start>12/02</start>
-				<end>12/03/2027</end>
+				<entry period="24" duration="5" start="00">01/01</entry>
+				<entry period="48">01/06</entry>
 			</date>
 		</fire>
 
@@ -44,11 +43,8 @@
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
 			<date>
-				<!-- Both start and end can be formatted as: dow, dd, dd/mm, dd/mm/yyyy, dd/mm/yyyy:HH-MM-SS -->
-				<!-- For example, a start date 05 will fire the device each day 05 of each month -->
-				<!-- For example, a start date friday will fire the device each friday -->
-				<start>12/02</start>
-				<end>12/03/2027</end>
+				<entry period="24" duration="5" start="00">01/01</entry>
+				<entry period="48">01/06</entry>
 			</date>
 		</fire>
 

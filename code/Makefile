@@ -18,6 +18,7 @@ OBJS   = $(OBJDIR)/main.o \
 		 $(OBJDIR)/logger.o \
 		 $(OBJDIR)/loggerconf.o \
 		 $(OBJDIR)/historify.o \
+		 $(OBJDIR)/fire.o \
 		 $(OBJDIR)/sb.o
 
 XML2_CFLAGS = $(shell xml2-config --cflags)

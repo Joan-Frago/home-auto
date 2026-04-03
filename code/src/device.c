@@ -46,7 +46,20 @@ int set_devices(){
 		if(devices[i].type == NULL) continue;
 		
 		devices[i].hist.remaining_ticks = devices[i].hist.period;
-		devices[i].fire.remaining_ticks = devices[i].hist.period*3600;
+
+		devices[i].fire.period = devices[i].fire.period * 3600;
+		devices[i].fire.remaining_ticks = devices[i].fire.period;
+		
+		int j;
+		for(j=0; j<DATE_ENTRIES; j++){
+			devices[i].fire.date.entries[j].running = 0;
+
+			devices[i].fire.date.entries[j].period = devices[i].fire.date.entries[j].period * 3600;
+			devices[i].fire.date.entries[j].period_countdown = devices[i].fire.date.entries[j].period;
+
+			devices[i].fire.date.entries[j].duration = devices[i].fire.date.entries[j].duration * 3600;
+			devices[i].fire.date.entries[j].duration_countdown = devices[i].fire.date.entries[j].duration;
+		}
 
 		if(devices[i].rl.id_pin){
 			devices[i].has_rl = 1;
@@ -73,10 +86,10 @@ int set_devices(){
 
 			analyzer_set_registers(devices[i].mb.registers);
 
-			int j;
-			for(j=0; j<REGISTER_COUNT; j++){
-				devices[i].mb.registers[j].value = modbus_read(devices[i].mb, devices[i].mb.registers[j]);
-				devices[i].mb.registers[j].last_value = devices[i].mb.registers[j].value;
+			int k;
+			for(k=0; k<REGISTER_COUNT; k++){
+				devices[i].mb.registers[k].value = modbus_read(devices[i].mb, devices[i].mb.registers[k]);
+				devices[i].mb.registers[k].last_value = devices[i].mb.registers[k].value;
 			}
 		}
 		else{
@@ -256,18 +269,23 @@ static int read_device_fire(device_t *device, xmlXPathContext *xpath_ctx){
 }
 
 static int read_device_fire_date(device_t *device, xmlXPathContext *xpath_ctx){
-	xmlXPathObjectPtr xpath_obj_start = xmlXPathEvalExpression(BAD_CAST "./fire/date/start", xpath_ctx);
-	xmlNode *date_start = xpath_obj_start->nodesetval->nodeTab[0];
+	xmlXPathObjectPtr xpath_obj_date = xmlXPathEvalExpression(BAD_CAST "./fire/date", xpath_ctx);
+	xmlNode *date_node = xpath_obj_date->nodesetval->nodeTab[0];
 
-	xmlXPathObjectPtr xpath_obj_end = xmlXPathEvalExpression(BAD_CAST "./fire/date/end", xpath_ctx);
-	xmlNode *date_end = xpath_obj_end->nodesetval->nodeTab[0];
+	int i = 0;
+	for(xmlNode *entry_node = date_node->children; entry_node != NULL; entry_node = entry_node->next){
+		if(entry_node->type == XML_ELEMENT_NODE){
+			if(i >= DATE_ENTRIES) break;
 
-	device->fire.date.start = (char *)xmlNodeGetContent(date_start);
-	device->fire.date.end = (char *)xmlNodeGetContent(date_end);
-	//printf("Device [%d] fire date: start=%s end=%s\n", device->id, device->fire.date.start, device->fire.date.end);
+			device->fire.date.entries[i].date     = (char *)xmlNodeGetContent(entry_node);
+			device->fire.date.entries[i].period   = atoi(read_node_prop(entry_node, "period"));
+			device->fire.date.entries[i].duration = atoi(read_node_prop(entry_node, "duration"));
+			device->fire.date.entries[i].start    = atoi(read_node_prop(entry_node, "start"));
 
-	xmlXPathFreeObject(xpath_obj_start);
-	xmlXPathFreeObject(xpath_obj_end);
+			i++;
+		}
+	}
+	xmlXPathFreeObject(xpath_obj_date);
 
 	return 0;
 }

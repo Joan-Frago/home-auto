@@ -4,10 +4,10 @@
 		<name>Persiana</name>
 		<description>Persiana habitació papas</description>
 		<historify active="1" period="0"></historify>
-		<fire active="1" period="12">
+		<fire active="0" period="12">
 			<date>
-				<start>12/02</start>
-				<end>12/03/2027</end>
+				<entry period="24" duration="5" start="00">01/01</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
 			</date>
 		</fire>
 
@@ -22,8 +22,8 @@
 		<historify active="1" period="0"></historify>
 		<fire active="0" period="12">
 			<date>
-				<start>12/02</start>
-				<end>12/03/2027</end>
+				<entry period="24" duration="5" start="00">01/01</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
 			</date>
 		</fire>
 
@@ -34,15 +34,25 @@
 	<device id="3">
 		<type>ANALYZER</type>
 		<name>Consum</name>
-		<description>Consum elèctric</description>
+		<description></description>
 		<historify active="1" period="0"></historify>
-		<fire active="0" period="12">
-			<date>
-				<start>12/02</start>
-				<end>12/03/2027</end>
-			</date>
-		</fire>
 
 		<modbus connection_type="TCP" slave="1"></modbus>
 	</device>
+
+	<device id="4">
+		<type>LIGHT_BULB</type>
+		<name>Calentador Agua</name>
+		<description></description>
+		<historify active="0" period="0"></historify>
+		<fire active="1" period="0">
+			<date>
+				<entry period="24" duration="5" start="23">01/01</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
+			</date>
+		</fire>
+
+		<relay id_pin="RO2.8" pin="2.8"></relay>
+	</device>
+
 </devices>

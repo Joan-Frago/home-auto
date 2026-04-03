@@ -3,21 +3,19 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include <time.h>
 #include "../inc/config.h"
 #include "../inc/tcp_server.h"
 #include "../inc/device.h"
 #include "../inc/logger.h"
 #include "../inc/loggerconf.h"
 #include "../inc/historify.h"
-
-#define LOG_FIRE
+#include "../inc/fire.h"
 
 #define LOG_FILE "log/home.log"
 
 static void *core(void*);
 static void exit_handler(int);
-
-static int fire_device(device_t *device);
 
 int main(){
 	signal(SIGINT, exit_handler);
@@ -75,43 +73,21 @@ static void *core(void* arg){
 
 	device_t *devices = get_devices_arr();
 
+	struct timespec target_time;
+	clock_gettime(CLOCK_MONOTONIC, &target_time);
+
 	for(;;){
 		int i;
 		for(i=0; i<MAX_DEVICES; i++){
 			historify_device(&devices[i]);
 			fire_device(&devices[i]);
 		}
-		sleep(1);
+
+		target_time.tv_sec += 1;
+		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &target_time, NULL);
 	}
 
 	return 0;
 }
 
-static int fire_device(device_t *device){
-	if(device->fire.active == 1){
-		if(device->fire.period == 0){
-			// TODO: Use date
-		}
-		else{
-			// TODO: Use period
-			if(device->fire.remaining_ticks == 1){
-				// Fire relay
-				if(device->rl.id_pin){
-					if(relay_write(&device->rl, 1) == -1){
 
-					}
-
-					#ifdef LOG_FIRE
-					LOG_DEBUG("Device \"%s\" with Relay \"%s\" fired.",device->name, device->rl.id_pin);
-					#endif
-				}
-
-				device->fire.remaining_ticks = device->fire.period;
-			}
-			else{
-				device->fire.remaining_ticks--;
-			}
-		}
-	}
-	return 0;
-}

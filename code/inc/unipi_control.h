@@ -49,9 +49,23 @@ typedef struct Historify{
 	int remaining_ticks; // seconds left to historify
 } historify_t;
 
+#define DATE_ENTRIES 5
+
+typedef struct {
+	char *date;
+	int running;
+
+	int period;
+	int period_countdown;
+
+	int duration;
+	int duration_countdown;
+
+	int start;
+} entry_t;
+
 typedef struct Date{
-	char *start;
-	char *end;
+	entry_t entries[DATE_ENTRIES];
 } date_t;
 
 typedef struct Fire_Device{
