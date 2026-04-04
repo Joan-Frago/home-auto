@@ -222,29 +222,26 @@ async function set_all_devices(){
 
 function set_device(device) {
 	document.getElementById(device["@id"]+"_title").textContent = device.name;
-	document.getElementById(device["@id"]+"_description").textContent = device.description;
+	document.getElementById(device["@id"]+"_modal-title").textContent = device.name;
+	document.getElementById(device["@id"]+"_modal-description").textContent = device.description;
 
 	construct_device(device);
-	if(device.has_mb()){
-		const modal = document.getElementById(device["@id"]+"_modal");
-		device.svg.onclick = () => {
-			modal.style.display = "flex";
-		};
 
-		const modal_close = document.getElementById(device["@id"]+"_modal-close");
-		modal_close.onclick = () => {
+	const modal = document.getElementById(device["@id"]+"_modal");
+	device.svg.onclick = () => {
+		modal.style.display = "flex";
+	};
+
+	const modal_close = document.getElementById(device["@id"]+"_modal-close");
+	modal_close.onclick = () => {
+		modal.style.display = "none";
+	};
+
+	window.onclick = (event) => {
+		if(event.target == modal){
 			modal.style.display = "none";
-		};
-
-		window.onclick = (event) => {
-			if(event.target == modal){
-				modal.style.display = "none";
-			}
-		};
-	}
-	else {
-		device.svg.onclick = () => update_pin_state(device);
-	}
+		}
+	};
 
 	devices.push(device);
 }
@@ -387,7 +384,7 @@ function update_device_pin_status(device){
 	}
 
 	if(device.has_mb()){
-		const state_element = document.getElementById(device["@id"]+"_modal-body");
+		const modal_tbody = document.getElementById(device["@id"]+"_modal-table-tbody");
 		let html = "";
  		for(reg of device.modbus.register){
  			html += "<tr>";
@@ -397,7 +394,7 @@ function update_device_pin_status(device){
 			html += "    <td>"+reg["@line"]   + "</td>";
 			html += "</tr>";
  		}
- 		state_element.innerHTML = html;
+ 		modal_tbody.innerHTML = html;
 	}
 }
 

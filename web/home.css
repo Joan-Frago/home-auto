@@ -114,11 +114,17 @@ body {
 
 /* Modal Header */
 .modal-header {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   padding: 2px 16px;
 }
 
 /* Modal Body */
-.modal-body {padding: 2px 16px;}
+.modal-body {
+	padding: 2px 16px;
+	margin: 0;
+}
 
 /* Modal Footer */
 .modal-footer {
@@ -131,6 +137,8 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  min-width: 50%;
+  min-height: 60%;
   max-width: 75%;
   position: relative;
   background-color: #fefefe;
@@ -201,7 +209,6 @@ body {
   text-align: left;
 }
 
-/* Specific fix for your inline margin issue */
-#3_modal-body {
-  margin: 0; /* Margins don't work on tbody; use padding on cells instead */
+.modal-description {
+	margin-bottom: 50%;
 }

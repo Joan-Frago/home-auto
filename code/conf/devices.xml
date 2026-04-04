@@ -41,7 +41,7 @@
 	</device>
 
 	<device id="4">
-		<type>LIGHT_BULB</type>
+		<type>WATER_HEATER</type>
 		<name>Calentador Agua</name>
 		<description></description>
 		<historify active="0" period="0"></historify>

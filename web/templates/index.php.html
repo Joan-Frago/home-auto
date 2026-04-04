@@ -1,27 +1,30 @@
-<section id="#@ID_DEVICE@#" class="device">
-	<div class="device-svg">
-		#@SVG@#
-	</div>
-	<h2 id="#@ID_DEVICE@#_title">Title</h2>
-	<h6 id="#@ID_DEVICE@#_description">Description</h2>
-	<!-- <button id="#@ID_DEVICE@#_button" class="device-btn off">Off</button> -->
-	<div id="#@ID_DEVICE@#_state"></div>
-
-</section>
-
-<div id="#@ID_DEVICE@#_modal" class="modal">
-	<div class="modal-content">
-
-		<div class="modal-header">
+<article id="#@ID_DEVICE@#_article">
+	<section id="#@ID_DEVICE@#" class="device">
+		<div class="device-svg">
 			#@SVG@#
 		</div>
-		<div class="modal-body">
-			<table class="modal-table">
-				<thead></thead>
-				<tbody id="#@ID_DEVICE@#_modal-body"></tbody>
-			</table>
-		</div>
+		<h2 id="#@ID_DEVICE@#_title">Title</h2>
+		<!-- <button id="#@ID_DEVICE@#_button" class="device-btn off">Off</button> -->
+		<div id="#@ID_DEVICE@#_state"></div>
 
-		<span id="#@ID_DEVICE@#_modal-close" class="close">&times;</span>
+	</section>
+
+	<div id="#@ID_DEVICE@#_modal" class="modal">
+		<div class="modal-content">
+
+			<div id="#@ID_DEVICE@#_modal-header" class="modal-header">
+				<h2 id="#@ID_DEVICE@#_modal-title">Title</h2>
+				<h6 id="#@ID_DEVICE@#_modal-description" class="modal-description">Description</h2>
+				#@SVG@#
+			</div>
+			<div id="#@ID_DEVICE@#_modal-body" class="modal-body">
+				<table class="modal-table">
+					<thead></thead>
+					<tbody id="#@ID_DEVICE@#_modal-table-tbody"></tbody>
+				</table>
+			</div>
+
+			<span id="#@ID_DEVICE@#_modal-close" class="close">&times;</span>
+		</div>
 	</div>
-</div>
+</article>

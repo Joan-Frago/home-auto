@@ -1,9 +1,10 @@
 # HOME-AUTO
 
+- Good SVG download page [Vecteezy](https://www.vecteezy.com/)
+
 ## TODO
 
 - Logging into postgres database
-- New SVG: Calentador Aigua
 
 ## UNIPI SYSFS
 
