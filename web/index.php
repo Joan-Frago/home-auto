@@ -17,9 +17,10 @@
 	</header>
 	<main class="house-grid">
 
-		<?php insert_svg(svg_path: "svg/persiana.svg", 			id_device: 1, device_type: "BLIND",      width: 160, height: 160); ?>
-		<?php insert_svg(svg_path: "svg/bulb.svg",     			id_device: 2, device_type: "LIGHT_BULB", width: 120, height: 170); ?>
-		<?php insert_svg(svg_path: "svg/Circutor-CVM-MINI.svg",	id_device: 3, device_type: "ANALYZER", 	 width: 200, height: 240); ?>
+		<?php insert_svg(svg_path: "svg/persiana.svg", 			id_device: 1, device_type: "BLIND",        width: 160, height: 160); ?>
+		<?php insert_svg(svg_path: "svg/bulb.svg",     			id_device: 2, device_type: "LIGHT_BULB",   width: 120, height: 170); ?>
+		<?php insert_svg(svg_path: "svg/Circutor-CVM-MINI.svg",	id_device: 3, device_type: "ANALYZER",     width: 200, height: 240); ?>
+		<?php insert_svg(svg_path: "svg/water-heater.svg",     	id_device: 4, device_type: "WATER_HEATER", width: 101, height: 308); ?>
 
 	</main>
 	
