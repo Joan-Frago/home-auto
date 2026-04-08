@@ -417,7 +417,7 @@ int get_device(char *resp_buf, xmlNode *data){
 		for(i=0; i<REGISTER_COUNT; i++){
 			sb_appendf(
 				sb,
-				"<register name=\"%s\" symbol=\"%s\" line=\"%s\" value=\"%u\"></register>",
+				"<register name=\"%s\" symbol=\"%s\" line=\"%s\" value=\"%f\"></register>",
 				device->mb.registers[i].name,
 				device->mb.registers[i].symbol,
 				device->mb.registers[i].line,

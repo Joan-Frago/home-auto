@@ -365,6 +365,12 @@ function construct_device(device){
 	device.has_di = () => device.hasOwnProperty("digital_input");
 	device.has_mb = () => device.hasOwnProperty("modbus");
 	device.svg = document.getElementById(device["@id"] + "_" + device["@type"]);
+
+	if(device.has_mb()){
+ 		for(reg of device.modbus.register){
+			reg["@value"] = formatFloatNumber(reg["@value"]);
+		}
+	}
 }
 
 function update_device(device){
@@ -444,7 +450,7 @@ function update_svg_analyzer(device){
 	const fields = document.querySelectorAll(".dataField");
 	fields.forEach((f) => {
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field1_value"){
-			f.textContent = device.modbus.register[0]["@value"] / 10;
+			f.textContent = device.modbus.register[0]["@value"];
 		}
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field1_symbol"){
 			f.textContent = device.modbus.register[0]["@symbol"];
@@ -455,7 +461,7 @@ function update_svg_analyzer(device){
 
 
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field2_value"){
-			f.textContent = device.modbus.register[1]["@value"] / 10;
+			f.textContent = device.modbus.register[1]["@value"];
 		}
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field2_symbol"){
 			f.textContent = device.modbus.register[1]["@symbol"];
@@ -466,7 +472,7 @@ function update_svg_analyzer(device){
 
 
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field3_value"){
-			f.textContent = device.modbus.register[2]["@value"] / 10;
+			f.textContent = device.modbus.register[2]["@value"];
 		}
 		if(f.id == device["@id"]+"_"+device["@type"]+"_field3_symbol"){
 			f.textContent = device.modbus.register[2]["@symbol"];
@@ -481,4 +487,6 @@ function load_pin_data(){
 	setInterval(get_device_pin_status, 3000);
 }
 
-
+function formatFloatNumber(n){
+	return Number.parseFloat(n).toFixed(2);
+}

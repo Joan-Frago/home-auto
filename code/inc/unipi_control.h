@@ -13,12 +13,14 @@ typedef enum MB_CONNECTION_TYPE {
 #define REGISTER_COUNT 11
 
 typedef struct {
+	char correction_op; // The operation to make ( *, /, +, - )
 	char *name;
 	char *symbol;
 	char *line;
+	uint8_t correction_no; // The number to apply to the operation ( 1, 10, 20, 100, ... )
+	float value;
+	float last_value;
 	int id;
-	uint32_t value;
-	uint32_t last_value;
 } reg_t;
 
 typedef struct {
@@ -82,6 +84,6 @@ int relay_read(rl_t *);
 int digital_read(di_t *);
 
 void analyzer_set_registers(reg_t registers[REGISTER_COUNT]);
-uint32_t modbus_read(mb_t, reg_t);
+float modbus_read(mb_t, reg_t);
 
 #endif
