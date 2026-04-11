@@ -488,5 +488,5 @@ function load_pin_data(){
 }
 
 function formatFloatNumber(n){
-	return Number.parseFloat(n).toFixed(2);
+	return Number.parseFloat(n).toFixed(1);
 }

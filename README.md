@@ -4,7 +4,7 @@
 
 ## TODO
 
-- Logging into postgres database
+- Add timestamp to database logging
 
 ## UNIPI SYSFS
 
