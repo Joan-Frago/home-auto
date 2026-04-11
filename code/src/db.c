@@ -52,8 +52,6 @@ int db_log(int device_id, const char *register_type, const char *register_id, fl
 
 	if (PQresultStatus(res) != PGRES_COMMAND_OK) {
 		LOG_ERROR("Insert failed: %s", PQerrorMessage(conn));
-	} else {
-		LOG_TRACE("Insert successful!");
 	}
 
 	// 4. Cleanup
