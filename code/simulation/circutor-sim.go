@@ -30,9 +30,49 @@ func main() {
 		for {
 			// --- Wiggle Modbus Values (Uses 'math/rand') ---
 			// Voltage: 230V +/- 5V (2250 to 2350)
+
+            // Linia 1
 			voltage := 2250 + rand.Intn(100)
 			serv.HoldingRegisters[0] = uint16(0)
 			serv.HoldingRegisters[1] = uint16(voltage)
+
+            corriente := 5
+            serv.HoldingRegisters[2] = uint16(0)
+            serv.HoldingRegisters[3] = uint16(corriente)
+
+            potencia_activa := 25
+            serv.HoldingRegisters[4] = uint16(0)
+            serv.HoldingRegisters[5] = uint16(potencia_activa)
+
+            // Linia 2
+			voltage = 2250 + rand.Intn(100)
+			serv.HoldingRegisters[10] = uint16(0)
+			serv.HoldingRegisters[11] = uint16(voltage)
+
+            corriente = 5
+            serv.HoldingRegisters[12] = uint16(0)
+            serv.HoldingRegisters[13] = uint16(corriente)
+
+            potencia_activa = 25
+            serv.HoldingRegisters[14] = uint16(0)
+            serv.HoldingRegisters[15] = uint16(potencia_activa)
+
+            // Linia 3
+			voltage = 2250 + rand.Intn(100)
+			serv.HoldingRegisters[20] = uint16(0)
+			serv.HoldingRegisters[21] = uint16(voltage)
+
+            corriente = 5
+            serv.HoldingRegisters[22] = uint16(0)
+            serv.HoldingRegisters[23] = uint16(corriente)
+
+            potencia_activa = 25
+            serv.HoldingRegisters[24] = uint16(0)
+            serv.HoldingRegisters[25] = uint16(potencia_activa)
+
+            energia_activa := 20
+            serv.HoldingRegisters[60] = uint16(0)
+            serv.HoldingRegisters[61] = uint16(energia_activa)
 
 			// Temperature: 34.0C +/- 2C (320 to 360)
 			temp := 320 + rand.Intn(40)
