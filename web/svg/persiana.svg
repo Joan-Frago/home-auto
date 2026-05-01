@@ -38,6 +38,6 @@
 	</g>
 	
 	<!-- Blank space to show/hide -->
-	<rect id="#@ID_DEVICE@#_blank" width="480" height="430" fill="#ffffff" x="10" y="10" class="invisible" />
+	<rect id="#@ID_DEVICE@#_blank" class="dataField invisible"  width="480" height="430" fill="#ffffff" x="10" y="10" />
   </g>
 </svg>
