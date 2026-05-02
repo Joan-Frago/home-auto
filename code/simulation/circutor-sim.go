@@ -21,7 +21,7 @@ func main() {
 
 	// 2. Background Task: Update Modbus Registers & Virtual Pins
 	go func() {
-		parentDir := "../virtual_pins"
+		parentDir := "./virtual_pins"
 		
 		// Ensure the directory exists (Uses 'os')
 		_ = os.MkdirAll(parentDir, 0755)
