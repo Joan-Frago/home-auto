@@ -130,43 +130,43 @@ static int talk(int *sockfd){
  * Data must be an xml.
  */
 static int process_recv(char *recv_buf, char *resp_buf){
-	// printf("Received buffer: %s\n", recv_buf);
-	//strcat(resp_buf, "ok");
-
 	req_t req;
-	read_request(&req, recv_buf);
-
-	// printf("Request function name: %s\n", req.function);
-	if(req.data){
-		// printf("Request data: %s\n", BAD_CAST req.data);
+    req.xml_doc  = NULL;
+    req.data     = NULL;
+    req.function = NULL;
+	
+	if(read_request(&req, recv_buf) != 0){
+		LOG_ERROR("Could not read request xml.");
+        return -1;
 	}
 
-	// Call another function that reads req.function and calls the target function
-	if(call_target_function(&req, resp_buf) == -1){
+    int ret = call_target_function(&req, resp_buf);
+	if(ret == -1)
 		LOG_ERROR("Error: call_target_function returned -1");
-		return -1;
-	}
 
-	return 0;
+    if(req.xml_doc) xmlFreeDoc(req.xml_doc);
+    if(req.function) free(req.function);
+
+	return ret;
 }
 
 /*
  * Reads the function name and content from the request and sets the request struct
  */
 static int read_request(req_t *req, char *xml_doc_str){
-	xmlDoc *req_xml_doc = xmlReadDoc(BAD_CAST xml_doc_str, NULL, NULL, 0);
-	if(req_xml_doc == NULL){
+	req->xml_doc = xmlReadDoc(BAD_CAST xml_doc_str, NULL, NULL, 0);
+	if(req->xml_doc == NULL){
 		LOG_ERROR("Error: Could not parse request xml.");
 		return -1;
 	}
 
-	xmlXPathContext *xpath_ctx = xmlXPathNewContext(req_xml_doc);
+	xmlXPathContext *xpath_ctx = xmlXPathNewContext(req->xml_doc);
 	if(xpath_ctx == NULL){
 		LOG_ERROR("Error: Unable to create new XPath context.");
 		return -1;
 	}
 
-	xmlNode *root = xmlDocGetRootElement(req_xml_doc);
+	xmlNode *root = xmlDocGetRootElement(req->xml_doc);
 
 	xmlNode *device = root->children;
 	device = device->next;
@@ -181,7 +181,6 @@ static int read_request(req_t *req, char *xml_doc_str){
 
 	req->function = strdup((char *)content);
 
-	xmlFreeNode(node);
 	xmlFree(content);
 	xmlXPathFreeObject(xpath_obj);
 

@@ -11,6 +11,7 @@ void *start_tcp_server(void*);
 typedef struct Request{
 	char *function;
 	xmlNode *data;
+    xmlDoc *xml_doc;
 }req_t;
 
 #endif
