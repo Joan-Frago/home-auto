@@ -93,7 +93,7 @@ static int talk(int *sockfd){
 	while(1){
 		// Receive a message
 		char recv_buf[MESSAGE_SIZE];
-		memset(recv_buf, 0, strlen(recv_buf)); // Set the buffer to 0 aka "empty the string"
+		memset(recv_buf, 0, sizeof(recv_buf));
 
 		ssize_t bytes_recv = recv(*sockfd, recv_buf, MESSAGE_SIZE-1, 0);
 		if(bytes_recv == 0){
@@ -108,7 +108,7 @@ static int talk(int *sockfd){
 
 		// Buffer where the response will be stored
 		char resp_buf[MESSAGE_SIZE];
-		memset(resp_buf, 0, strlen(resp_buf)); // Set the buffer to 0 aka "empty the string"
+		memset(resp_buf, 0, sizeof(resp_buf));
 
 		// Process received data
 		if(process_recv(recv_buf, resp_buf) != 0){
@@ -227,8 +227,8 @@ static int call_target_function(req_t *req, char *resp_buf){
 			goto error;
 		}
 	} else {
-		char *msg;
-		sprintf(msg, "Request not found: \"%s\"", req->function);
+		char msg[128];
+		snprintf(msg, sizeof(msg), "Request not found: \"%s\"", req->function);
 		LOG_INFO(msg);
 		err_msg = msg;
 

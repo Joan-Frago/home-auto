@@ -21,6 +21,8 @@ int main(){
 	signal(SIGINT, exit_handler);
 	signal(SIGTERM, exit_handler);
 
+    xmlInitParser();
+
     logger_initConsoleLogger(NULL);
     logger_initFileLogger(LOG_FILE, 1024 * 1024, 5);
     logger_setLevel(LogLevel_DEBUG);
