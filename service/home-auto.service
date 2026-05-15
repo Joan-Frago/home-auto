@@ -7,8 +7,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=joan
-Group=joan
+User=root
+Group=root
 
 # Directory where the service should run from (optional)
 WorkingDirectory=/opt/dev/home-auto/code/
