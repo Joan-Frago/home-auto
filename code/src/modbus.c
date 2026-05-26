@@ -25,12 +25,12 @@ void analyzer_set_registers(reg_t registers[REGISTER_COUNT]){
 	add_register(&registers[2],  "Potencia Activa L1", "kW",   "L1", 4, '\0', 0);
 
 	add_register(&registers[3],  "Tension Fase L2",    "V",    "L2", 10, '/', 10);
-	add_register(&registers[4],  "Corriente L2",       "A",    "L1", 12, '\0', 0);
-	add_register(&registers[5],  "Potencia Activa L2", "kW",   "L1", 14, '\0', 0);
+	add_register(&registers[4],  "Corriente L2",       "A",    "L2", 12, '\0', 0);
+	add_register(&registers[5],  "Potencia Activa L2", "kW",   "L2", 14, '\0', 0);
 
 	add_register(&registers[6],  "Tension Fase L3",    "V",    "L3", 20, '/', 10);
-	add_register(&registers[7],  "Corriente L3",       "A",    "L1", 22, '\0', 0);
-	add_register(&registers[8],  "Potencia Activa L3", "kW",   "L1", 24, '\0', 0);
+	add_register(&registers[7],  "Corriente L3",       "A",    "L3", 22, '\0', 0);
+	add_register(&registers[8],  "Potencia Activa L3", "kW",   "L3", 24, '\0', 0);
 
 	add_register(&registers[9],  "Energia Activa",     "kW·h", "",   60, '\0', 0);
 	add_register(&registers[10], "Temperatura",        "ºC",   "",   80, '/', 10);
