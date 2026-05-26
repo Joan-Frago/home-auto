@@ -1,6 +1,8 @@
 #ifndef DB_H
 #define DB_H
 
-int db_log(int, const char *, const char *, float);
+#include "device.h"
+
+int db_log(char [DEVICE_ID_SIZE], const char *, const char *, float);
 
 #endif

@@ -14,12 +14,13 @@
 #define MAX_DEVICES 24
 #define DEVICE_NAME_SIZE 64
 #define DEVICE_DESC_SIZE 1024
+#define DEVICE_ID_SIZE 16
 
 typedef struct Device{
-	int id;
 	int has_mb;
 	int has_di;
 	int has_rl;
+	char id[DEVICE_ID_SIZE];
 	char *type;
 	char *name;
 	char *description;
@@ -34,7 +35,7 @@ typedef struct Device{
 int set_devices();
 
 device_t *get_devices_arr(void);
-device_t *get_device_by_id(int id);
+device_t *get_device_by_id(char id[DEVICE_ID_SIZE]);
 
 int get_all_devices(char *resp_buf);
 int get_device_pin_status(char *resp_buf, xmlNode *);

@@ -1,10 +1,11 @@
 #include "../inc/logger.h"
 #include "../inc/config.h"
+#include "../inc/device.h"
 #include <string.h>
 #include <stdlib.h>
 #include <libpq-fe.h>
 
-int db_log(int device_id, const char *register_type, const char *register_id, float value){
+int db_log(char device_id[DEVICE_ID_SIZE], const char *register_type, const char *register_id, float value){
 	// 1. Establish connection
 	char conninfo[512];
 	sprintf(
@@ -26,10 +27,10 @@ int db_log(int device_id, const char *register_type, const char *register_id, fl
 	}
 
 	// 2. Prepare Data for Insertion
-	char dev_id_str[8];
+	char dev_id_str[DEVICE_ID_SIZE];
 	char value_str[32];
 
-	snprintf(dev_id_str, sizeof(dev_id_str), "%d", device_id);
+	snprintf(dev_id_str, sizeof(dev_id_str), "%s", device_id);
 	snprintf(value_str, sizeof(value_str), "%f", value);
 
 	const char *paramValues[4];

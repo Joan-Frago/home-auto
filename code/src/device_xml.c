@@ -91,7 +91,7 @@ xmlNode *find_child_node(xmlNode *parent, xmlChar *node_name) {
     return NULL;
 }
 
-xmlNode *read_devices_xml_by_id(int id){
+xmlNode *read_devices_xml_by_id(char id[DEVICE_ID_SIZE]){
 	device_xml_t *dxml = open_devices_xml_file();
 
 	device_t dev_ptr;
@@ -104,9 +104,9 @@ xmlNode *read_devices_xml_by_id(int id){
 
 			dxml->xpath_context->node = device;
 			
-			dev_ptr.id = read_device_id(device);
+			strncpy(dev_ptr.id, read_device_id(device), DEVICE_ID_SIZE);
 
-			if(dev_ptr.id == id){
+			if(strcmp(dev_ptr.id, id) == 0){
 				found_device = device;
 			}
 		}
@@ -132,7 +132,7 @@ int read_devices_xml(){
 
             device_t *devices = get_devices_arr();
 			struct Device *dev_ptr = &devices[dev_idx];
-			dev_ptr->id = read_device_id(device);
+			strncpy(dev_ptr->id, read_device_id(device), DEVICE_ID_SIZE);
 			read_device_type(dev_ptr, dxml->xpath_context);
 			read_device_name(dev_ptr, dxml->xpath_context);
 			read_device_description(dev_ptr, dxml->xpath_context);
@@ -180,9 +180,12 @@ char *read_node_content(const char *xpath_expression, xmlXPathContext *xpath_ctx
 	return ret;
 }
 
-int read_device_id(xmlNode *dev_node){
-	char *id = read_node_prop(dev_node, "id");
-	return atoi(id);
+char *read_device_id(xmlNode *dev_node){
+	char *temp_id = read_node_prop(dev_node, "id");
+    char *id = malloc(DEVICE_ID_SIZE);
+    id = strndup(temp_id, DEVICE_ID_SIZE);
+    free(temp_id);
+	return id;
 }
 
 static int read_device_type(device_t *device, xmlXPathContext *xpath_ctx){

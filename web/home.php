@@ -22,7 +22,7 @@ function replace_templates($template_path, $svg_path, $id_device, $device_type, 
 
 function insert_svg($svg_path, $id_device, $device_type, $width, $height){
 	$template_path = "templates/index.php.html";
-	$section_str = replace_templates($template_path, $svg_path, $id_device, $device_type, $width, $height);
+	$section_str = replace_templates($template_path, $svg_path, "device_".$id_device, $device_type, $width, $height);
 
 	echo $section_str;
 }

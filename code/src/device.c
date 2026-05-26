@@ -94,10 +94,10 @@ device_t *get_devices_arr(void){
  * Returns a pointer to the device with the id provided as argument.
  * If not found, returns NULL;
  */
-device_t *get_device_by_id(int id){
+device_t *get_device_by_id(char id[DEVICE_ID_SIZE]){
 	int i;
 	for(i=0; i<MAX_DEVICES; i++){
-		if(devices[i].id == id){
+		if(strcmp(devices[i].id, id) == 0){
 			return &devices[i];
 		}
 	}
@@ -136,7 +136,7 @@ int get_device(char *resp_buf, xmlNode *data){
 	}
 
 	device_t tmp_dev;
-	tmp_dev.id = read_device_id(tmp_node);
+	strncpy(tmp_dev.id, read_device_id(tmp_node), DEVICE_ID_SIZE);
 
 	device_t *device = get_device_by_id(tmp_dev.id);
 	if(device == NULL)
@@ -145,7 +145,7 @@ int get_device(char *resp_buf, xmlNode *data){
 	// Construct response
 	StringBuilder *sb = sb_create();
 
-	sb_appendf(sb, "<device id=\"%d\" type=\"%s\">", device->id, device->type);
+	sb_appendf(sb, "<device id=\"%s\" type=\"%s\">", device->id, device->type);
 	sb_appendf(sb, "<name>%s</name>", device->name);
 	sb_appendf(sb, "<description>%s</description>", device->description);
 
@@ -191,7 +191,7 @@ int update_pin_state(char *resp_buf, xmlNode *data){
 	}
 
 	device_t tmp_dev;
-	tmp_dev.id = read_device_id(tmp_node);
+	strncpy(tmp_dev.id, read_device_id(tmp_node), DEVICE_ID_SIZE);
 
 	char *new_state = read_node_prop(tmp_node, "new_state");
 	if(new_state == NULL){
