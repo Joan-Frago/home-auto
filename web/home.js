@@ -156,9 +156,12 @@ function xml2json(xml, tab) {
 
 
 classes = {
-	INVISIBLE:  "invisible",
-	BUTTON_ON:  "on",
-	BUTTON_OFF: "off"
+	INVISIBLE:    "invisible",
+	BUTTON_ON:    "on",
+	BUTTON_OFF:   "off",
+    TAB_BUTTON:   "tab-button",
+    TAB:          "tab",
+    TAB_SELECTED: "tab-selected"
 };
 
 texts = {
@@ -232,12 +235,17 @@ function get_data_field_by_id(field_id){
 }
 
 function set_device(device) {
-	document.getElementById(device["@id"]+"_title").textContent = device.name;
-	document.getElementById(device["@id"]+"_modal-title").textContent = device.name;
+	document.getElementById(device["@id"]+"_title").textContent             = device.name;
+	document.getElementById(device["@id"]+"_modal-title").textContent       = device.name;
 	document.getElementById(device["@id"]+"_modal-description").textContent = device.description;
 
 	construct_device(device);
+    set_device_modal(device);
 
+	devices.push(device);
+}
+
+function set_device_modal(device){
 	const modal = document.getElementById(device["@id"]+"_modal");
 	device.svg.onclick = () => {
 		modal.style.display = "flex";
@@ -248,13 +256,78 @@ function set_device(device) {
 		modal.style.display = "none";
 	};
 
-	window.onclick = (event) => {
-		if(event.target == modal){
-			modal.style.display = "none";
-		}
-	};
+    set_device_modal_tabs(device);
+}
 
-	devices.push(device);
+function set_device_modal_tabs(device){
+    let tab_buttons = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab-button");
+    let tabs        = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
+
+    tab_buttons.forEach(btn => {
+        tabs.forEach(tab => {
+            switch(device["@type"]){
+                case "BLIND": {
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "LIGHT_BULB":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "ANALYZER":{
+
+                } break;
+                case "WATERING_SYSTEM":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "WATER_HEATER":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB);
+                    }
+                } break;
+                default: break;
+            }
+        });
+    });
+
+    tab_buttons = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab-button");
+    tabs        = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
+
+    let i;
+    for(i = 0; i < tab_buttons.length; i++){
+        if(i == 0) {
+            tab_buttons[i].classList.add(classes.TAB_SELECTED);
+            tabs[i].classList.remove(classes.INVISIBLE);
+        }
+        else {
+            tab_buttons[i].classList.remove(classes.TAB_SELECTED);
+            tabs[i].classList.add(classes.INVISIBLE);
+        }
+    }
 }
 
 async function update_pin_state(device){
@@ -423,6 +496,7 @@ function update_device_svg(device){
 		case "LIGHT_BULB": 	    update_svg_light_bulb(device);      break;
 		case "ANALYZER":	    update_svg_analyzer(device);        break;
         case "WATERING_SYSTEM": update_svg_watering_system(device); break;
+        case "WATER_HEATER":                                        break;
 		default: break;
 	}
 }

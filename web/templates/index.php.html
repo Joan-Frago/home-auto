@@ -17,11 +17,35 @@
 				<h6 id="#@ID_DEVICE@#_modal-description" class="modal-description">Description</h2>
 				#@SVG@#
 			</div>
+
 			<div id="#@ID_DEVICE@#_modal-body" class="modal-body">
-				<table class="modal-table">
+                <div>
+                    <button class="tab-button" data-name="realtime-state">Estat actual</button>
+                    <button class="tab-button" data-name="historics">Historics</button>
+                </div>
+
+				<table class="modal-table tab" data-name="realtime-state">
 					<thead></thead>
 					<tbody id="#@ID_DEVICE@#_modal-table-tbody"></tbody>
 				</table>
+
+                <table class="tab" data-name="historics">
+                    <thead>
+                            <th>Interficie</th>
+                            <th>Registre</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>relay</td> <!-- register_type -->
+                            <td>RO2.8</td> <!-- register_id -->
+                            <td>1.00000</td> <!-- value -->
+                            <td>15/03/2026 21:00:24</td> <!-- timestamp converted to date -->
+                        </tr>
+                    </tbody>
+                </table>
+
 			</div>
 
 			<span id="#@ID_DEVICE@#_modal-close" class="close">&times;</span>
