@@ -1,7 +1,8 @@
 <devices>
-	<device id="1">
+	<device id="device_1">
 		<name>Calefacció</name>
 		<description>Càrrega calefacció</description>
+        <type>LIGHT_BULB</type> <!-- LIGHT_BULB | BLIND | ANALYZER | WATER_HEATER -->
 		<historify active="0" period="1"></historify> <!-- period as seconds -->
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
@@ -12,7 +13,7 @@
 				<!-- The start attribute sets the time of day (24h format) at which the relay will start -->
 				<!-- Multiple entries can be used, the system must use the one that bests matches the entry value -->
 				<entry period="24" duration="5" start="00">01/01</entry>
-				<entry period="48">01/06</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
 			</date>
 		</fire>
 
@@ -20,15 +21,16 @@
 		<digital_input id_pin="DI1.4" pin="1.4"></digital_input>
 	</device>
 
-	<device id="2">
-		<name>Device 2</name>
+	<device id="device_2">
+		<name>Persiana</name>
 		<description></description>
+        <type>BLIND</type>
 		<historify active="0" period="1"></historify> <!-- period as seconds -->
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
 			<date>
 				<entry period="24" duration="5" start="00">01/01</entry>
-				<entry period="48">01/06</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
 			</date>
 		</fire>
 
@@ -36,15 +38,16 @@
 		<digital_input id_pin="DI1.2" pin="1.2"></digital_input>
 	</device>
 
-	<device id="3">
-		<name>Device 3</name>
+	<device id="device_3">
+		<name>Analitzador</name>
 		<description></description>
+        <type>ANALYZER</type>
 		<historify active="0" period="1"></historify> <!-- period as seconds -->
 		<fire active="1" period="12"> <!-- period as hours -->
 			<!-- Start the device at a specified date or time period -->
 			<date>
 				<entry period="24" duration="5" start="00">01/01</entry>
-				<entry period="48">01/06</entry>
+				<entry period="48" duration="5" start="00">01/06</entry>
 			</date>
 		</fire>
 
