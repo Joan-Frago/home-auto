@@ -78,5 +78,6 @@ char *get_var_value(char *var_name){
 		}
 	}
 	LOG_ERROR("Can not find config var \"%s\"", var_name);
+    exit(1);
 	return NULL;
 }
