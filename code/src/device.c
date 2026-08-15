@@ -123,7 +123,7 @@ int get_all_devices(char *resp_buf){
 }
 
 int set_device(xmlNode *dev_node){
-	LOG_DEBUG("Setting device...\n");
+	LOG_INFO("Setting device...\n");
 
 	return 0;
 }
@@ -135,12 +135,14 @@ int get_device(char *resp_buf, xmlNode *data){
 		return -1;
 	}
 
-	device_t tmp_dev;
-	strncpy(tmp_dev.id, read_device_id(tmp_node), DEVICE_ID_SIZE);
-
-	device_t *device = get_device_by_id(tmp_dev.id);
+    char id[DEVICE_ID_SIZE];
+    strncpy(id, read_node_prop(tmp_node, "id"), DEVICE_ID_SIZE);
+	device_t *device = get_device_by_id(id);
 	if(device == NULL)
+    {
+        LOG_ERROR("Did not find device with id \"%s\"", id);
 		return -1;
+    }
 
 	// Construct response
 	StringBuilder *sb = sb_create();
