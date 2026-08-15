@@ -118,7 +118,6 @@ xmlNode *read_devices_xml_by_id(char id[DEVICE_ID_SIZE]){
 }
 
 int read_devices_xml(){
-	// printf("Reading devices xml...\n");
 	device_xml_t *dxml = open_devices_xml_file();
 
 	if(dxml == NULL) return -1;
@@ -155,8 +154,6 @@ int read_devices_xml(){
 
 	close_devices_xml_file(dxml);
 
-	// printf("Finished reading xml\n");
-	
 	return 0;
 }
 
@@ -254,6 +251,7 @@ static int read_device_fire_date(device_t *device, xmlXPathContext *xpath_ctx){
 			i++;
 		}
 	}
+
 	xmlXPathFreeObject(xpath_obj_date);
 
 	return 0;
