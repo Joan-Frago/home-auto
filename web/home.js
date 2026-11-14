@@ -489,7 +489,7 @@ function update_device_pin_status(device){
 }
 
 function update_device_svg(device){
-	const svg = document.getElementById(device["@id"] + device["@type"]);
+	const svg = document.getElementById(device["@id"] + "_" + device["@type"]);
 
 	switch(device["@type"]){
 		case "BLIND": 		    update_svg_blind(device);           break;
