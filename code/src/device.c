@@ -192,16 +192,15 @@ int update_pin_state(char *resp_buf, xmlNode *data){
 		return -1;
 	}
 
-	device_t tmp_dev;
-	strncpy(tmp_dev.id, read_device_id(tmp_node), DEVICE_ID_SIZE);
-
 	char *new_state = read_node_prop(tmp_node, "new_state");
 	if(new_state == NULL){
 		LOG_ERROR("Error: device.c : Could not read new_state property from node");
 		return -1;
 	}
 
-	device_t *device = get_device_by_id(tmp_dev.id);
+    char id[DEVICE_ID_SIZE];
+    strncpy(id, read_node_prop(tmp_node, "id"), DEVICE_ID_SIZE);
+	device_t *device = get_device_by_id(id);
 	if(device == NULL)
 		return -1;
 
