@@ -312,22 +312,26 @@ function set_device_modal_tabs(device){
                 default: break;
             }
         });
+
+        
+        // Hide and show tabs as their buttons are clicked
+
+        btn.onclick = (e) => {
+            tbs = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab-button");
+            tabs = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
+
+            for(let i = 0; i < tbs.length; i++){
+                if(e.target == tbs[i]){
+                    tabs[i].classList.remove(classes.INVISIBLE);
+                    e.target.classList.add(classes.TAB_SELECTED);
+                }
+                else {
+                    tabs[i].classList.add(classes.INVISIBLE);
+                    e.target.classList.remove(classes.TAB_SELECTED);
+                }
+            }
+        };
     });
-
-    tab_buttons = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab-button");
-    tabs        = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
-
-    let i;
-    for(i = 0; i < tab_buttons.length; i++){
-        if(i == 0) {
-            tab_buttons[i].classList.add(classes.TAB_SELECTED);
-            tabs[i].classList.remove(classes.INVISIBLE);
-        }
-        else {
-            tab_buttons[i].classList.remove(classes.TAB_SELECTED);
-            tabs[i].classList.add(classes.INVISIBLE);
-        }
-    }
 }
 
 async function update_pin_state(device){
