@@ -264,58 +264,7 @@ function set_device_modal_tabs(device){
     let tabs        = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
 
     tab_buttons.forEach(btn => {
-        tabs.forEach(tab => {
-            switch(device["@type"]){
-                case "BLIND": {
-                    if(btn.dataset.name == "realtime-state"){
-                        btn.classList.add(classes.INVISIBLE);
-                        btn.classList.remove(classes.TAB_BUTTON);
-                    }
-                    if(tab.dataset.name == "realtime-state"){
-                        tab.classList.add(classes.INVISIBLE);
-                        tab.classList.remove(classes.TAB);
-                    }
-                } break;
-                case "LIGHT_BULB":{
-                    if(btn.dataset.name == "realtime-state"){
-                        btn.classList.add(classes.INVISIBLE);
-                        btn.classList.remove(classes.TAB_BUTTON);
-                    }
-                    if(tab.dataset.name == "realtime-state"){
-                        tab.classList.add(classes.INVISIBLE);
-                        tab.classList.remove(classes.TAB);
-                    }
-                } break;
-                case "ANALYZER":{
-
-                } break;
-                case "WATERING_SYSTEM":{
-                    if(btn.dataset.name == "realtime-state"){
-                        btn.classList.add(classes.INVISIBLE);
-                        btn.classList.remove(classes.TAB_BUTTON);
-                    }
-                    if(tab.dataset.name == "realtime-state"){
-                        tab.classList.add(classes.INVISIBLE);
-                        tab.classList.remove(classes.TAB);
-                    }
-                } break;
-                case "WATER_HEATER":{
-                    if(btn.dataset.name == "realtime-state"){
-                        btn.classList.add(classes.INVISIBLE);
-                        btn.classList.remove(classes.TAB_BUTTON);
-                    }
-                    if(tab.dataset.name == "realtime-state"){
-                        tab.classList.add(classes.INVISIBLE);
-                        btn.classList.remove(classes.TAB);
-                    }
-                } break;
-                default: break;
-            }
-        });
-
-        
         // Hide and show tabs as their buttons are clicked
-
         btn.onclick = (e) => {
             tbs = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab-button");
             tabs = document.querySelectorAll("#"+device["@id"]+"_modal-body .tab");
@@ -331,6 +280,69 @@ function set_device_modal_tabs(device){
                 }
             }
         };
+
+
+        // Hide tabs and buttons we don't need
+        tabs.forEach(tab => {
+            switch(device["@type"]){
+                case "BLIND": {
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    else {
+                        btn.click()
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "LIGHT_BULB":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    else {
+                        btn.click()
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "ANALYZER":{
+                    btn.click()
+                } break;
+                case "WATERING_SYSTEM":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    else {
+                        btn.click()
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                case "WATER_HEATER":{
+                    if(btn.dataset.name == "realtime-state"){
+                        btn.classList.add(classes.INVISIBLE);
+                        btn.classList.remove(classes.TAB_BUTTON);
+                    }
+                    else {
+                        btn.click()
+                    }
+                    if(tab.dataset.name == "realtime-state"){
+                        tab.classList.add(classes.INVISIBLE);
+                        tab.classList.remove(classes.TAB);
+                    }
+                } break;
+                default: break;
+            }
+        });
     });
 }
 
